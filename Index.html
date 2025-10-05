@@ -2146,7 +2146,7 @@ function renderCalendar() {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     
     calendarMonthYear.textContent = new Date(year, month).toLocaleString('en-US', { month: 'long', year: 'numeric' });
-    calendarMonthYear.prepend("Blood Calendar - ");
+    calendarMonthYear.prepend("RESCUES Calendar - ");
 
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     daysOfWeek.forEach(day => {
