@@ -2092,7 +2092,7 @@ function showPasswordResetDialog() {
             await firebase.auth().sendPasswordResetEmail(email); 
             
             closeModal();
-            alert('দয়া করে কিছু সময় অপেক্ষা করুন।  পাসওয়ার্ড রিসেট লিংক পাঠানো হবে! অনুগ্রহ করে আপনার ইনবক্স এর spam section চেক করুন।');
+            alert('পাসওয়ার্ড রিসেট লিংক আপনার ইমেইল এড্রেসে পাঠানো হয়েছ!অনুগ্রহ করে আপনার ইনবক্স/ইমেইল এর spam section চেক করুন।');
         } catch (e) {
             let errorMessage = 'পাসওয়ার্ড রিসেট ইমেল পাঠাতে সমস্যা হয়েছে।';
             if (e.code === 'auth/user-not-found') {
