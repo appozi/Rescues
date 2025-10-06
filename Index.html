@@ -904,14 +904,14 @@
             <span>Contact-Us</span>
           </a>
         </div>
-        <h2 style="margin-top:30px; border-bottom: 2px solid var(--accent); padding-bottom: 5px;">OUR PRODUCTS</h2>
+        <h2 style="margin-top:30px; border-bottom: 2px solid var(--accent); padding-bottom: 5px;">পণ্য এবং সহায়তা পোস্ট</h2>
     
     <div id="productPostsContainer" class="product-posts-container">
         <div id="productCardGrid" class="product-card-grid">
-            <div class="muted" id="initialProductLoadMessage">LOADING..</div>
+            <div class="muted" id="initialProductLoadMessage">পোস্ট লোড হচ্ছে...</div>
         </div>
         <div id="noProductPosts" class="muted" style="display:none;margin-top:20px; text-align:center;">
-            NO PRODUCTS POST AVAILABLE NOW
+            এই মুহূর্তে কোনো প্রোডাক্ট পোস্ট নেই।
         </div>
     </div>
     <div class="contact-card"> 
@@ -961,7 +961,7 @@
   <div class="calendar-container">
     <div class="calendar-header">
       <button id="prevMonthBtn">‹</button>
-      <h4 id="calendarMonthYear">RESCUES Calendar - </h4>
+      <h4 id="calendarMonthYear">RESCUE Calendar - </h4>
       <button id="nextMonthBtn">›</button>
     </div>
     <div class="calendar-grid" id="calendarGrid"></div>
@@ -1456,6 +1456,11 @@ function openEmergencyPostModal(postId = null) {
         <label>রোগীর নাম</label>
         <input id="emPatientName" type="text" value="${escapeHtml(payload.patientName || '')}" placeholder="রোগীর নাম"/>
       </div>
+      
+      <div class="input-group">
+        <label>ঠিকানা / হাসপাতালের নাম</label>
+        <input id="emPatientAddress" type="text" value="${escapeHtml(payload.patientAddress || payload.location || '')}" placeholder="যেখানে রক্ত লাগবে, তার ঠিকানা"/>
+      </div>
       <div class="input-group">
         <label>রোগীর অবস্থা ও প্রয়োজন</label>
         <textarea id="emDetails" rows="3" placeholder="কোথায়, কখন, কতটুকু রক্ত প্রয়োজন, রোগীর অবস্থা ইত্যাদি">${escapeHtml(payload.details || '')}</textarea>
@@ -1475,6 +1480,8 @@ function openEmergencyPostModal(postId = null) {
       const newPayload = {
         blood: document.getElementById('emBlood').value,
         patientName: document.getElementById('emPatientName').value.trim(),
+        // 🌟 সংশোধিত অংশ: ঠিকানা ডেটা সংগ্রহ করা হলো
+        patientAddress: document.getElementById('emPatientAddress').value.trim(), 
         details: document.getElementById('emDetails').value.trim(),
         phone: document.getElementById('emPhone').value.trim(),
       };
@@ -1497,6 +1504,7 @@ function openEmergencyPostModal(postId = null) {
     };
   }, 50);
 }
+
 async function registerUser(name,email,password){
   const cred = await firebase.auth().createUserWithEmailAndPassword(email,password);
   await cred.user.updateProfile({ displayName: name });
@@ -1707,6 +1715,7 @@ function renderDonorsGrid(){
                     </div>
                     <p style="margin: 0; font-size: 16px;">
                         <span style="font-weight: 600;">রোগী:</span> ${escapeHtml(latestEmergencyPost.patientName)}<br>
+                        <span style="font-weight: 600;">ঠিকানা:</span> ${escapeHtml(latestEmergencyPost.patientAddress || latestEmergencyPost.location || 'দেওয়া হয়নি')}<br>
                         <span style="font-weight: 600;">বিস্তারিত:</span> ${escapeHtml(latestEmergencyPost.details)}
                     </p>
                     <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
@@ -1764,6 +1773,7 @@ function renderEmergencyPosts() {
               </div>
               <p style="margin: 0; font-size: 16px;">
                 <span style="font-weight: 600;">রোগী:</span> ${escapeHtml(post.patientName)}<br>
+                <span style="font-weight: 600;">ঠিকানা:</span> ${escapeHtml(post.patientAddress || post.location || 'দেওয়া হয়নি')}<br>
                 <span style="font-weight: 600;">বিস্তারিত:</span> ${escapeHtml(post.details)}
               </p>
               <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
@@ -2146,7 +2156,7 @@ function renderCalendar() {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     
     calendarMonthYear.textContent = new Date(year, month).toLocaleString('en-US', { month: 'long', year: 'numeric' });
-    calendarMonthYear.prepend("RESCUES Calendar - ");
+    calendarMonthYear.prepend("Blood Calendar - ");
 
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     daysOfWeek.forEach(day => {
@@ -2467,7 +2477,7 @@ if (latestEmergencyPost) {
     </div>
     <p style="margin: 0; font-size: 16px;">
       <span style="font-weight: 600;">রোগী:</span> ${escapeHtml(latestEmergencyPost.patientName || latestEmergencyPost.patientname || "")}<br>
-      <span style="font-weight: 600;">রোগীর ঠিকানা:</span> ${escapeHtml(latestEmergencyPost.patientAddress || latestEmergencyPost.patientaddress || "")}<br>
+      <span style="font-weight: 600;">ঠিকানা:</span> ${escapeHtml(latestEmergencyPost.patientAddress || latestEmergencyPost.patientaddress || latestEmergencyPost.location || 'দেওয়া হয়নি')}<br>
       <span style="font-weight: 600;">বিস্তারিত:</span> ${escapeHtml(latestEmergencyPost.details || "")}
     </p>
     <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
