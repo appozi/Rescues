@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rescues.netlify.app/sitemap.xml
