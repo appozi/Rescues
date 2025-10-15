@@ -1,0 +1,3260 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>RESCUES-The Blood Heros Community</title>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ==============================================
+  THEME VARIABLES (UPDATED FOR LIGHT/DARK)
+  ==============================================
+  */
+  :root{
+    /* Dark Mode (Default) */
+    --bg:#071022;
+    --card:#0b1220;
+    --accent:#e11d48;
+    --muted:#94a3b8;
+    --white: #e6eef7;
+    --success:#16a34a;
+    --danger:#ef4444;
+    --glass-border: rgba(255,255,255,0.06);
+    --neon: 0 0 16px rgba(225,29,72,0.18), 0 0 32px rgba(225,29,72,0.08);
+    --header-h:64px;
+    --footer-h:86px;
+    --active-color: #e11d48;
+    --text-color: var(--white);
+    --bg-gradient: linear-gradient(180deg,#061426 0%, #071022 100%);
+    --shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  /* Light Theme Overrides (Deeper Light for Eye Comfort) */
+  .light-mode {
+    --bg: #f3f4f6; /* Slightly deeper background */
+    --card: #ffffff;
+    --accent: #e11d48;
+    --muted: #6b7280;
+    --white: #1f2937; /* Dark text in light mode */
+    --glass-border: rgba(0,0,0,0.1);
+    --bg-gradient: linear-gradient(180deg,#e5e7eb 0%, #f3f4f6 100%);
+    --text-color: #1f2937;
+    --active-color: #e11d48;
+    --shadow: 0 4px 8px rgba(0,0,0,0.08);
+  }
+  
+  /* ==============================================
+  GENERAL STYLES
+  ==============================================
+  */
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:var(--bg-gradient);color:var(--text-color);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow:hidden}
+  
+  /* Utilities */
+  .muted{color:var(--muted);font-size:13px}
+  .small{font-size:12px}
+  
+  /* ===== INTRO STYLES ===== */
+/* Loading Screen (Updated for CORNER) */
+  #loadingScreen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    z-index: 9999;
+  }
+  #squidIntro {
+    display: flex;
+    gap: 8px;
+  }
+  #squidIntro .letter {
+    font-size: 64px;
+    font-weight: 900;
+    opacity: 0;
+    transform: scale(0.5) translateY(60px);
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(225,29,72,0.4);
+    animation: riseUp 0.6s ease forwards;
+  }
+  #squidIntro .letter:nth-child(1){ animation-delay: 0s; }
+  #squidIntro .letter:nth-child(2){ animation-delay: 0.2s; }
+  #squidIntro .letter:nth-child(3){ animation-delay: 0.4s; }
+  #squidIntro .letter:nth-child(4){ animation-delay: 0.6s; }
+  #squidIntro .letter:nth-child(5){ animation-delay: 0.8s; }
+  #squidIntro .letter:nth-child(6){ animation-delay: 1.0s; } /* New delay for the 6th letter 'R' */
+  #squidIntro .letter:nth-child(7){ animation-delay: 1.2s; } /* New felay for the 7th letter 'S' */
+  @keyframes riseUp {
+    0%   { opacity: 0; transform: scale(0.5) translateY(60px) rotate(-8deg); }
+    60%  { opacity: 1; transform: scale(1.2) translateY(0) rotate(3deg); }
+    100% { opacity: 1; transform: scale(1) translateY(0) rotate(0); }
+  }
+  #loadingFrom {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 17px;
+    color: #aaa;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 1.0s;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  #app{display:none;height:100%;width:100%;position:relative;overflow:hidden}
+
+/* ==============================================
+নতুন CSS: CORNER এর নিচে সাবটাইটেল 
+==============================================
+*/
+#loadingSubtitle {
+    margin-top: 10px; /* CORNER থেকে একটু নিচে নামানোর জন্য */
+    font-size: 13px; 
+    font-weight: 300;
+    color: #a4fff3; /* #loadingFrom এর মতো একই রঙ ব্যবহার করা হলো */
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 1.8s; /* CORNER এর অ্যানিমেশন শেষ হওয়ার পরপরই এটি ফেড ইন হবে */
+}
+  /* Header (Unchanged) */
+  header.app-header{position:fixed;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(7, 16, 34, 0.8);border-bottom:1px solid var(--glass-border);z-index:30; backdrop-filter: blur(6px);}
+  .light-mode header.app-header{background:rgba(243, 244, 246, 0.9); border-bottom:1px solid rgba(0,0,0,0.1);}
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer;}
+  .drop{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:24px; background: }
+  .brand h1{font-size:18px;margin:0}
+  .menu-btn{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--glass-border);background:rgba(255,255,255,0.01)}
+  .light-mode .menu-btn{background:rgba(0,0,0,0.05); border:1px solid rgba(0,0,0,0.1);}
+  
+  /* Menu Overlay (Unchanged) */
+  #menuOverlay{position:fixed;inset:0;background:rgba(2,6,23,0.9);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:60;padding:20px}
+  .light-mode #menuOverlay{background:rgba(243, 244, 246, 0.95); backdrop-filter:blur(6px);}
+  #menuOverlay.visible{display:flex}
+  #menuOverlay .closeX{position:absolute;top:18px;right:18px;font-size:28px;cursor:pointer; color: var(--text-color)}
+  #menuOverlay .menuItem{width:100%;max-width:420px;background:var(--card);border-radius:12px;padding:16px;margin:8px 0;border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;cursor:pointer; transition: background 0.2s;}
+  #menuOverlay .menuItem:hover{background: rgba(225,29,72,0.1);}
+  .light-mode #menuOverlay .menuItem:hover{background: rgba(225,29,72,0.05);}
+  #menuOverlay .menuItem h3{margin:0;font-size:18px}
+  #menuOverlay .menuItem p{margin:0;color:var(--muted);font-size:13px}
+
+  /* Main Content Area (Unchanged) */
+  main{position:absolute;inset:var(--header-h) 0 var(--footer-h) 0; -webkit-overflow-scrolling: touch; overflow-y: auto;}
+  .page {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    padding: 12px 14px;
+    overflow-x: hidden;
+    min-height: 100%;
+  }
+  .page.active {
+    display: block;
+    opacity: 1;
+  }
+  .grid{display:grid;grid-template-columns:repeat(1,1fr);gap:12px}
+
+  /* Card Styles (Unchanged) */
+  .card{background:var(--card);padding:12px;border-radius:12px;border:1px solid var(--glass-border);display:flex;gap:12px;align-items:center;cursor:pointer; box-shadow: var(--shadow); transition: transform 0.2s;}
+  .card.clickable:hover{transform: translateY(-2px); opacity: 0.95;}
+  .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,#0b1220,#09101a);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:var(--white);border:1px solid rgba(255,255,255,0.04)}
+  .light-mode .avatar{background:#e5e7eb; color:var(--text-color); border:1px solid rgba(0,0,0,0.1);}
+  .card-body{flex:1}
+  .name-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .meta{font-size:13px;color:var(--muted);margin-top:6px}
+  .tag{padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px}
+  .eligible{background:rgba(22,163,74,0.14);color:var(--success);border:1px solid rgba(22,163,74,0.08)}
+  .not-eligible{background:rgba(239,68,68,0.06);color:var(--danger);border:1px solid rgba(239,68,68,0.06)}
+  .blood-group{font-size:18px;font-weight:800;letter-spacing:0.6px; color: var(--accent);}
+  .ratings { color: #f5b041; }
+  .rating-star { font-size: 16px; margin: 0 1px; }
+
+  /* Emergency Card (Unchanged) */
+  .emergency-card {
+      background: linear-gradient(135deg, var(--accent), #cc0c36); 
+      color: white; 
+      padding: 16px; 
+      border-radius: 12px; 
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 16px rgba(225,29,72,0.4);
+      margin-bottom: 12px;
+  }
+  .blood-group-large {
+      font-size: 24px;
+      font-weight: 900;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.2);
+  }
+  /* New emergency icon pulse effect */
+  @keyframes emergency-pulse {
+      0%, 100% {
+          color: #ef4444; /* Red */
+      }
+      50% {
+          color: #f59e0b; /* Yellow */
+      }
+  }
+  .nav-btn.has-emergency svg {
+      animation: emergency-pulse 1s infinite;
+  }
+  /* Add Page (Unchanged) */
+  .add-center{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column}
+  
+  /* Plus icon professional design (Unchanged) */
+  .big-plus{
+    width: 120px;
+    height: 120px;
+    border-radius: 25px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px; 
+    color: var(--text-color);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 8px 30px rgba(225, 29, 72, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.light-mode .big-plus{
+    color: var(--text-color);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 30px rgba(225, 29, 72, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.big-plus:hover {
+    transform: scale(1.05) translateY(-5px);
+    border-color: rgba(225, 29, 72, 0.6);
+    box-shadow: 0 12px 40px rgba(225, 29, 72, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+  /* Spinning animation (Unchanged) */
+  @keyframes spin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  .spin-animation {
+    animation: spin 0.6s ease-in-out;
+  }
+  
+  /* =======================================================
+  ২. Footer Navigation আপডেট (৬টি আইটেম) - প্রতিস্থাপন করুন
+========================================================== */
+footer.app-footer {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 10px;
+    background: rgba(7, 16, 34, 0.8);
+    padding: 8px 10px;
+    border-radius: 10px;
+    /* পরিবর্তন: 6টি কলামে সমানভাবে ভাগ করা হলো */
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); 
+    width: 90%;
+    max-width: 450px;
+    z-index: 40;
+    border: 0.1px solid var(--glass-border);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(0,0,0,0.5);
+    gap: 4px; 
+}
+.light-mode footer.app-footer {
+    background: rgba(255,255,255,0.9);
+    border: 0.1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.nav-btn {
+    /* পরিবর্তন: ৬টি আইটেমের জন্য প্রশস্ততা ও উচ্চতা কমানো */
+    width: 100%; 
+    height: 50px;
+    border-radius: 10px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    /* ফন্ট সাইজ কমানো */
+    font-size: 10px; 
+    color: var(--muted);
+    gap: 4px; 
+    transition: all 0.3s ease;
+    position: relative;
+    text-align: center;
+}
+/* ... .nav-btn.active এবং অন্যান্য স্টাইলগুলো অপরিবর্তিত থাকবে। ... */
+
+  .nav-btn.active {
+    color: var(--active-color);
+    font-weight: 600;
+    background-color: rgba(225, 29, 72, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 10px rgba(225, 29, 72, 0.2);
+  }
+  .light-mode .nav-btn.active {
+      background-color: rgba(225, 29, 72, 0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 10px rgba(225, 29, 72, 0.2);
+  }
+  .nav-btn.active svg {
+    color: var(--active-color);
+  }
+  .nav-btn.has-emergency::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 8px;
+      height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      box-shadow: 0 0 4px var(--danger);
+  }
+
+  /* Modal Styles (Unchanged) */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.8);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:70;padding:18px}
+  .light-mode .modal-backdrop{background:rgba(243, 244, 246, 0.95);}
+  .modal-backdrop.visible{display:flex}
+  .modal{width:100%;max-width:640px;background:var(--card);border-radius:12px;padding:18px;border:1px solid var(--glass-border); color: var(--text-color); box-shadow: var(--shadow);}
+  
+  /* Review Card (Unchanged) */
+  .review-card {
+    background: var(--bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  .light-mode .review-card {
+      background: #f8fafc;
+      border: 1px solid rgba(0,0,0,0.1);
+  }
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .review-meta {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Auth Form Container (Used for Modals) (Unchanged) */
+  .auth-form-container {
+      padding: 24px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      max-width: 420px;
+      width: 100%;
+      margin: 0 auto; 
+      box-shadow: var(--shadow);
+      animation: fadeInScale 0.4s ease-out;
+  }
+  .auth-form-container h3 { margin-top: 0; }
+  
+  @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Form Elements (Unchanged) */
+  .input-group { margin-bottom: 12px; }
+  .input-group label { display: block; font-size: 14px; margin-bottom: 4px; color: var(--muted); }
+  
+  .auth-form-container input, 
+  .auth-form-container select, 
+  .auth-form-container textarea {
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid var(--glass-border);
+      background:var(--bg);
+      color:var(--text-color);
+      transition: border-color 0.2s, background 0.2s;
+  }
+  .light-mode .auth-form-container input, 
+  .light-mode .auth-form-container select, 
+  .light-mode .auth-form-container textarea {
+      border:1px solid rgba(0,0,0,0.15); 
+      background: #f8fafc;
+  }
+  .auth-form-container input:focus, 
+  .auth-form-container select:focus, 
+  .auth-form-container textarea:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(225,29,72,0.3);
+  }
+  .auth-form-container .row{display:flex;gap:8px}
+
+  /* Buttons (Unchanged) */
+  .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700; transition: all 0.2s;}
+  .btn.primary{background:linear-gradient(90deg,#ff6b86,#e11d48);color:white}
+  .btn.primary:hover{background:linear-gradient(90deg,#e11d48,#ff6b86); transform: translateY(-1px);}
+  .btn.ghost{background:transparent;border:1px solid var(--glass-border);color:var(--text-color)}
+  .btn.ghost:hover{background: rgba(255,255,255,0.05); transform: translateY(-1px);}
+  .light-mode .btn.ghost{border:1px solid rgba(0,0,0,0.15); color:var(--text-color);}
+  .light-mode .btn.ghost:hover{background: rgba(0,0,0,0.05);}
+  .btn.locked {
+    background: transparent;
+    border: 1px solid var(--muted); 
+    color: var(--muted);
+    cursor: not-allowed;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.8;
+    padding: 10px 14px; 
+    font-weight: 700;
+    border-radius: 10px;
+    transition: none; /* Lock transition */
+  }
+  .btn.emergency {
+      background: var(--danger);
+      color: white;
+  }
+  .btn-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+  }
+
+  /* Logout Modal Specific Styles (Unchanged) */
+  #logoutReasonModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2,6,23,0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 70;
+    padding: 18px;
+  }
+  .light-mode #logoutReasonModal {
+      background: rgba(243, 244, 246, 0.95);
+  }
+  #logoutReasonModal textarea {
+      color: var(--text-color);
+      background: var(--bg);
+      border: 1px solid var(--glass-border);
+  }
+  .light-mode #logoutReasonModal textarea {
+      background: #f8fafc;
+      border: 1px solid rgba(0,0,0,0.15);
+  }
+
+  /* ------------------------------------------------ */
+  /* --- UPDATED SEARCH INPUT STYLING ---             */
+  /* ------------------------------------------------ */
+  .search-input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px; /* Increased margin for better separation */
+      box-shadow: var(--shadow); /* Added subtle shadow */
+      border-radius: 12px;
+      overflow: hidden; 
+  }
+
+  #searchInput {
+      width:100%;
+      padding:12px 14px; /* Increased padding */
+      padding-right: 50px !important; /* Make room for the clear button */
+      border-radius:12px !important;
+      border:1px solid var(--glass-border) !important;
+      background:var(--card) !important; /* Used card background */
+      color:var(--text-color) !important;
+      font-size: 16px;
+      transition: border-color 0.2s, background 0.2s;
+  }
+
+  .light-mode #searchInput {
+      background: #ffffff !important;
+      border:1px solid rgba(0,0,0,0.1) !important;
+  }
+
+  #searchInput:focus {
+      border-color: var(--accent) !important;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(225,29,72,0.3);
+  }
+
+  #clearSearch {
+      position: absolute;
+      right: 4px; /* Adjusted position */
+      width: 40px; /* Made larger target area */
+      height: 40px;
+      border-radius: 50%;
+      background: transparent; /* Changed to transparent */
+      color: var(--muted); /* Use muted color for the icon */
+      border: none;
+      cursor: pointer;
+      font-size: 20px; /* Larger icon */
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, color 0.2s;
+      z-index: 10;
+  }
+  
+  #clearSearch:hover {
+      color: var(--accent); /* Hover effect */
+  }
+
+  #clearSearch.visible {
+      opacity: 1;
+      pointer-events: auto;
+  }
+  /* ------------------------------------------------ */
+
+  /* Contact Card (Unchanged) */
+  .contact-card {
+      margin-top: 30px;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+  }
+  .contact-header h4 {
+      margin: 0 0 12px 0;
+      color: var(--accent);
+      border-bottom: 1px dashed var(--glass-border);
+      padding-bottom: 8px;
+  }
+  .light-mode .contact-header h4 {
+      border-bottom: 1px dashed rgba(0,0,0,0.1);
+  }
+  .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+  }
+  .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-color);
+      text-decoration: none;
+      border: 1px solid var(--glass-border);
+      transition: background 0.2s;
+  }
+  .contact-item:hover {
+      background: var(--accent);
+      color: white;
+  }
+  .light-mode .contact-item {
+      background: #f8fafc;
+      border: 1px solid rgba(0,0,0,0.1);
+  }
+  .light-mode .contact-item:hover {
+      background: var(--accent);
+      color: white;
+  }
+  .contact-item svg {
+      width: 18px;
+      height: 18px;
+  }
+
+  /* Calendar Modal (Unchanged) */
+  .custom-calendar-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.8);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 80;
+      padding: 18px;
+  }
+  .light-mode .custom-calendar-modal {
+      background: rgba(243, 244, 246, 0.95);
+  }
+  .custom-calendar-modal.visible {
+      display: flex;
+  }
+  .calendar-container {
+      background: var(--card);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      max-width: 320px;
+      width: 100%;
+  }
+  .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+  }
+  .calendar-header h4 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+  }
+  .calendar-header button {
+      background: var(--bg);
+      color: var(--text-color);
+      border: 1px solid var(--glass-border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+  }
+  .light-mode .calendar-header button {
+      background: #f8fafc;
+      border: 1px solid rgba(0,0,0,0.1);
+  }
+  .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+      font-size: 12px;
+  }
+  .calendar-day {
+      font-weight: 700;
+      color: var(--accent);
+      padding: 5px 0;
+  }
+  .calendar-date {
+      padding: 8px 0;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+  }
+  .calendar-date:hover {
+      background: rgba(225,29,72,0.1);
+  }
+  .calendar-date.current {
+      border: 1px solid var(--accent);
+  }
+  .calendar-date.selected {
+      background: var(--accent);
+      color: white;
+  }
+  /* পুরো ইনপুট এবং আইকনকে একসাথে রাখার জন্য */
+.password-input-wrapper {
+    position: relative; /* আইকনকে পজিশন দেওয়ার জন্য এটি আবশ্যক */
+    display: flex;
+    align-items: center;
+}
+
+/* ইনপুট ফিল্ডকে সম্পূর্ণ চওড়া করুন এবং আইকনের জন্য জায়গা রাখুন */
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 40px !important; /* আইকনের জন্য জায়গা */
+}
+
+/* টগল আইকন স্টাইল */
+.toggle-password {
+    position: absolute; /* Wrapper এর সাপেক্ষে ফিক্সড */
+    right: 10px; /* ডান দিক থেকে দূরত্ব */
+    top: 50%;
+    transform: translateY(-50%); /* উল্লম্বভাবে মাঝখানে আনার জন্য */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--muted); 
+    padding: 5px;
+    z-index: 10;
+}
+/* --- নতুন প্রোডাক্ট পোস্ট কার্ডের স্টাইল (Main App) --- */
+.product-posts-container {
+    margin-top: 20px;
+    padding-bottom: 80px; 
+}
+.product-card-grid {
+    display: grid;
+    /* ছোট স্ক্রিনের জন্য ২ কলাম */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+    gap: 12px;
+}
+.product-card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+}
+.product-card:hover {
+    transform: translateY(-2px);
+    opacity: 0.98;
+}
+.product-image-container {
+    width: 100%;
+    /* ছবির স্কয়ার সাইজ নিশ্চিত করার জন্য: 1:1 Aspect Ratio */
+    padding-top: 100%; 
+    position: relative;
+    overflow: hidden;
+}
+.product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ছবিকে ক্রপ করে স্কয়ার কনটেইনারের মধ্যে ফিট করবে */
+}
+.product-text-box {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.product-description {
+    font-size: 14px;
+    color: var(--text-color);
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+    max-height: 4.2em; /* 3 lines of text */
+    overflow: hidden;
+}
+.buy-now-btn {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    background: var(--accent); /* আপনার বিদ্যমান accent color ব্যবহার করা হলো */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    transition: opacity 0.2s;
+}
+.buy-now-btn:active {
+    opacity: 0.8;
+}
+/* ============================================== */
+/* FAQ - নতুন CSS স্টাইল */
+/* ============================================== */
+
+/* FAQ-এর প্রশ্ন ও বাটনকে পাশাপাশি রাখতে */
+.menu-item-with-details .question-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    /* আপনার অ্যাপের থিমের সাথে মানানসই বর্ডার */
+    border-bottom: 1px solid var(--glass-border); 
+}
+
+/* উত্তর দেখুন বাটনের স্টাইল */
+.menu-item-with-details .answer-toggle-btn {
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap; 
+    transition: background 0.3s ease; 
+}
+
+/* উত্তর দেখুন বাটনের লুকানোর স্টাইল */
+.menu-item-with-details.open .answer-toggle-btn {
+    background: var(--card); /* খোলা অবস্থায় ব্যাকগ্রাউন্ড পরিবর্তন */
+    color: var(--muted);
+}
+
+/* উত্তর অংশ: ডিফল্টভাবে লুকানো থাকবে এবং ট্রানজিশন ব্যবহার করবে */
+.menu-item-with-details .item-details {
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    padding: 0 10px;
+}
+.menu-item-with-details .item-details p.muted {
+    padding: 10px 0;
+    border-top: 1px dashed var(--glass-border); 
+    margin: 0;
+}
+/* =======================================================
+  ১. নতুন সেকশন প্রাথমিকভাবে লুকিয়ে রাখা
+========================================================== */
+#shopPage {
+    display: none; 
+}
+
+</style>
+
+</head>
+<body class="dark-mode">
+<div id="logoutReasonModal" class="modal-backdrop" style="display:none;">
+    <div class="modal">
+        <h3 id="logoutModalTitle">Logout</h3>
+        <p class="muted" id="logoutModalSubtitle">কেনো লগআউট করতে চাচ্ছেন? (ঐচ্ছিক)</p>
+        <div style="margin-top:8px">
+            <textarea id="logoutReasonInput" rows="3" style="width:100%;border-radius:8px;padding:8px;" placeholder="আপনার কারণ লিখুন..."></textarea>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+                <button class="btn ghost" id="logoutCancelBtn" onclick="document.getElementById('logoutReasonModal').style.display='none'">Cancel</button>
+                <button class="btn primary" id="logoutReasonSubmit">Logout</button> 
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ===== NEW INTRO OVERLAY (REPLACE OLD loadingScreen) ===== -->
+<div id="loadingScreen">
+  <div id="squidIntro">
+    <span class="letter">R</span>
+    <span class="letter">E</span>
+    <span class="letter">S</span>
+    <span class="letter">C</span>
+    <span class="letter">U</span>
+    <span class="letter">E</span>
+    <span class="letter">S</span>
+  </div>
+  
+  <div id="loadingSubtitle"><h3>Responding Every Second, Caring Until Every Survival</h3></div>
+  <div id="loadingSubtitle">BETA/CONCEPT MODE</div>
+  <div id="loadingFrom">from Appozi</div>
+</div>
+<div id="app" aria-hidden="true">
+  <header class="app-header" role="banner">
+    <div class="brand" aria-hidden="false" onclick="scrollToTop()">
+      <div class="drop">🩸</div>
+      <div>
+        <h1 id="brandTitle">RESCUES</h1>
+        <div class="muted small" id="brandSubtitle">রক্তের সহায়তা</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div id="userBadge" class="muted small" style="display:none"></div>
+      <div id="menuBtn" class="menu-btn" aria-label="Open menu" title="Menu">
+        <svg width="20" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+    </div>
+  </header>
+<div id="menuOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="closeX" id="closeMenu" aria-label="Close menu">×</div>
+    
+    <div class="menuItem" id="aboutBtn" role="button" tabindex="0">
+      <div>
+        <h3 id="aboutMenuTitle">About</h3>
+        <p class="muted" id="aboutMenuSubtitle">অ্যাপের কাজ ও উদ্দেশ্য</p>
+      </div>
+      <div>›</div>
+    </div>
+    
+    <div class="menuItem" id="guidelinesBtn" role="button" tabindex="0">
+      <div>
+        <h3 id="guidelinesMenuTitle">Guidelines</h3>
+        <p class="muted" id="guidelinesMenuSubtitle">ডোনারের সাথে আচরণ</p>
+      </div>
+      <div>›</div>
+    </div>
+    
+    <div class="menuItem" id="healthCornerBtn" role="button" tabindex="0">
+      <div>
+        <h3 id="healthCornerMenuTitle">Health Corner</h3>
+        <p class="muted" id="healthCornerMenuSubtitle">রক্তদান ও স্বাস্থ্য টিপস</p>
+      </div>
+      <div>›</div>
+    </div>
+    
+    <div class="menuItem" id="themeChangeBtn" role="button" tabindex="0">
+      <div>
+        <h3 id="themeMenuTitle">Change Theme</h3>
+        <p class="muted" id="themeMenuSubtitle">Dark / Light Mode</p>
+      </div>
+      <div>
+        <span id="currentTheme">Dark</span> ›
+      </div>
+    </div>
+    
+    <div class="menuItem" id="languageChangeBtn" role="button" tabindex="0">
+      <div>
+        <h3 id="languageMenuTitle">Change Language</h3>
+        <p class="muted" id="languageMenuSubtitle">বাংলা / English</p>
+      </div>
+      <div>
+        <span id="currentLang">বাংলা</span> ›
+      </div>
+    </div>
+    
+    <div class="menuItem" id="logoutBtn" role="button" tabindex="0">
+      <div>
+        <h3 id="logoutMenuTitle">Logout</h3>
+        <p class="muted" id="logoutMenuSubtitle">অ্যাকাউন্ট থেকে বের হয়ে যান</p>
+      </div>
+      <div>›</div>
+    </div>
+  </div>
+  <main role="main">
+  
+
+    <section id="homePage" class="page active" aria-label="Home">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <h2 style="margin:0" id="homePageTitle">Home</h2>
+        <div class="muted small" id="homePageSubtitle">সকল ডোনার</div>
+      </div>
+      <div id="donorsGrid" class="grid" aria-live="polite"></div>
+      <div id="noData" class="muted" style="display:none;margin-top:20px"></div>
+      
+      <div id="donorsLoginPrompt" style="display:none; text-align:center; padding: 20px;">
+          <p style="font-size: 16px; color: var(--muted);" id="loginPromptText">ডোনার ডেটা দেখতে দয়া করে লগইন করুন।</p>
+          <button class="btn primary" onclick="openAuthModal('login')" id="loginPromptBtn">লগইন করুন</button>
+      </div>
+      <div id="donorsRefreshPrompt" style="display:none; text-align:center; padding: 20px;">
+          <button class="btn primary" onclick="refreshDonors()" id="refreshBtn">রিফ্রেশ করুন</button>
+      </div>
+    </section>
+    <section id="searchPage" class="page" aria-label="Search">
+      <div class="search-input-group" style="margin-bottom:12px">
+        <input id="searchInput" type="text" placeholder="জেলা বা শহরের নাম দিয়ে খুঁজুন....." />
+        <button id="clearSearch" aria-label="Clear search">×</button>
+      </div>
+      <div id="searchGrid" class="grid"></div>
+      <div id="noSearch" class="muted" style="display:none;margin-top:20px">কোনো ফলাফল মেলেনি।</div>
+    </section>
+    <section id="addPage" class="page" aria-label="Add">
+      <div class="add-center">
+        <div class="muted" id="addPagePrompt">নতুন ডোনার যোগ করতে নিচের প্লাস আইকনে চাপ দিন</div>
+        <div id="addPlus" class="big-plus" aria-label="Add donor">＋</div>
+        <div class="muted small" id="addPageSubtitle">নিজে রক্ত দান করুন এবং অন্যদের রক্ত দানে উৎসাহিত করুন</div>
+      </div>
+    </section>
+    <section id="profilePage" class="page" aria-label="Profile">
+      <h2 id="profilePageTitle">Profile</h2>
+      <div style="margin-top:12px" id="profileInfo"></div>
+      <h3 style="margin-top:18px" id="myDonorsTitle">Your Added Donors</h3>
+      <div id="myDonors" class="grid" style="margin-top:12px"></div>
+      <div id="noMyDonors" class="muted" style="display:none;margin-top:12px">তুমি এখনও কোনো ডোনার যোগ করোনি।</div>
+    </section>
+    <section id="shopPage" class="page" aria-label="Shop/Products">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <h2 style="margin:0" id="shopPageTitle">Shop / Products</h2>
+    <div class="muted small" id="shopPageSubtitle">আমাদের পণ্যসমূহ</div>
+  </div>
+  
+  <div id="productPostsContainer" class="product-posts-container">
+      <div id="productCardGrid" class="product-card-grid">
+          <div class="muted" id="initialProductLoadMessage">পণ্য লোড হচ্ছে...</div>
+      </div>
+      <div id="noProductPosts" class="muted" style="display:none;margin-top:20px; text-align:center;">
+          এই মুহূর্তে কোনো পণ্য নেই।
+      </div>
+  </div>
+
+  </section>
+
+    <section id="emergencyPage" class="page" aria-label="Emergency Posts">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <h2 style="margin:0" id="emergencyPageTitle">Emergency Posts</h2>
+        <button class="btn primary small" onclick="openEmergencyPostModal()">+ New Post</button>
+      </div>
+      <div id="emergencyGrid" class="grid" aria-live="polite"></div>
+      <div id="noEmergencyPosts" class="muted" style="display:none;margin-top:20px">কোনো ইমার্জেন্সি পোস্ট নেই।</div>
+      <div class="contact-card">
+        <div class="contact-header">
+          <h4 id="contactHeader">Contact Us</h4>
+        </div>
+        <div class="contact-grid">
+          <a href="https://www.facebook.com/ziusid" target="_blank" class="contact-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            <span>Follow Page</span>
+          </a>
+          <a href="https://www.facebook.com/groups/fenipolytechnicbondhumohol" target="_blank" class="contact-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>Join Group</span>
+          </a>
+          <a href="mailto:your-ziu.info@gmail.com" class="contact-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>E-mail-Us</span>
+          </a>
+          <a href="https://wa.me/8801400491519" target="_blank" class="contact-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2h-2.82a2 2 0 0 1-1.74-1.23L10.43 15a1 1 0 0 1 .4-1.42l3.41-2.28a1 1 0 0 1 1.41.4l.26.42a1 1 0 0 0 1.25.29l1.62-.97a2 2 0 0 1 2.38.35L22 16.92zM12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"></path></svg>
+            <span>Contact-Us</span>
+          </a>
+          <a href="#faqPage" class="contact-item" onclick="toggleOverlay('faqPage')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span>FAQ </span>
+          </a>
+        
+    </div>
+    
+        </div>
+    <div class="contact-card"> 
+        </div>
+        <div class="menuOverlay" id="faqPage" onclick="closeFaqAndReset()">
+    <div class="modal-container" onclick="event.stopPropagation()">
+        
+        <div class="header" style="background:var(--card)">
+            <div class="header-inner">
+                <button class="back-btn" onclick="closeFaqAndReset()"> 
+                    <i class="icon" style="--icon: 'arrow-back-outline';"></i>
+                </button>
+                <h3>সচরাচর জিজ্ঞাসা (FAQ)</h3>
+            </div>
+        </div>
+
+        <div class="content-area">
+
+            <div id="faq-initial-screen" style="padding: 30px; text-align: center;">
+                <p class="muted" style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.5;">
+                    রক্তদান প্রক্রিয়া, ডোনারের সাথে আচরণ এবং জরুরি পোস্ট করার নিয়মাবলী সম্পর্কে সাধারণ প্রশ্ন ও উত্তরগুলো দেখতে নিচের বাটনে চাপ দিন।
+                </p>
+                <button id="showFaqQuestionsBtn" class="primary-btn" style="width: 100%; max-width: 300px; padding: 12px 20px;" onclick="showFaqQuestions()">
+                    <i class="icon" style="--icon: 'list-circle-outline'; margin-right: 8px;"></i>
+                    প্রশ্নাবলী দেখুন
+                </button>
+            </div>
+
+            <div class="menu-list" id="faq-list" style="display: none;">
+                
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>১. রক্তদানের সর্বনিম্ন ও সর্বোচ্চ বয়স কত?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">সাধারণত ১৮ থেকে ৬৫ বছর বয়স হলে রক্ত দেওয়া যায়। তবে দাতার শারীরিক অবস্থা ও স্বাস্থ্য পরীক্ষার ওপর এটি নির্ভর করে।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>২. রক্ত দেওয়ার জন্য ন্যূনতম ওজন কত হওয়া চাই?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">কমপক্ষে ৪৫ কিলোগ্রাম (kg) বা তার বেশি হওয়া প্রয়োজন।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>৩. কতদিন পর পর রক্ত দান করা যায়?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">একজন সুস্থ পুরুষ প্রতি ৩ মাস (৯০ দিন) পর পর এবং সুস্থ মহিলা ৪ মাস (১২০ দিন) পর পর রক্তদান করতে পারেন।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>৪. রক্তদানের আগে কী ধরনের প্রস্তুতি নেওয়া দরকার?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">রক্ত দেওয়ার আগে পর্যাপ্ত পরিমাণে জল পান করুন এবং অবশ্যই পেট ভরে কিছু খেয়ে আসুন। খালি পেটে রক্ত দেওয়া উচিত নয়।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>৫. রক্ত দিতে মোট কত সময় লাগে?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">পুরো প্রক্রিয়াটি প্রায় ৩০ মিনিট সময় নেয়। এর মধ্যে স্বাস্থ্য পরীক্ষা ও রক্ত সংগ্রহ (১০-১৫ মিনিট) অন্তর্ভুক্ত।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>৬. অসুস্থ বা ওষুধ খেলে কি রক্ত দেওয়া যায়?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">না। অ্যান্টিবায়োটিক বা নির্দিষ্ট কোনো ওষুধ গ্রহণ করলে বা অসুস্থ থাকলে রক্ত দেওয়া উচিত নয়। পুরোপুরি সুস্থ হওয়ার পরই রক্তদান করুন।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>৭. আমাদের অ্যাপে কীভাবে জরুরি রক্তের অনুরোধ করব?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">প্রোফাইলে গেলে এবং এই পেজের উপরে '+new post' অপশনটি বেছে নিয়ে রোগীর ও প্রয়োজনীয় রক্তের বিস্তারিত তথ্য দিন।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>৮. ডোনারের সাথে যোগাযোগ করার সময় কী ধরনের আচরণ করা উচিত?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">ডোনারের প্রতি সর্বদা বিনয়ী ও কৃতজ্ঞ থাকুন। তাদের ব্যক্তিগত সময় ও সিদ্ধান্তকে সম্মান করুন এবং কোনো প্রকার চাপ সৃষ্টি করবেন না।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>৯. রক্ত দেওয়ার পর আমার কী করা উচিত?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">রক্তদানের পর কমপক্ষে ১৫ মিনিট বিশ্রাম নিন। প্রচুর পরিমাণে জল, ফলের রস বা স্বাস্থ্যকর পানীয় পান করুন এবং সেই দিন ভারী কাজ করা থেকে বিরত থাকুন।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>১০. রক্তদান কি স্বাস্থ্যের জন্য ক্ষতিকর?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">না, এটি স্বাস্থ্যের জন্য ক্ষতিকর নয়। বরং এটি নতুন রক্তকণিকা তৈরি করতে সাহায্য করে এবং শরীরকে সতেজ রাখে।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>১১. আমার রক্তের গ্রুপ জানি না, তবুও কি ডোনার যোগ করতে পারব?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">না, ডোনার হিসেবে যোগ করার সময় রক্তের গ্রুপ জানা আবশ্যক। আপনি রক্ত পরীক্ষার মাধ্যমে আপনার গ্রুপ নিশ্চিত করে তবেই যোগ করুন।</p>
+                    </div>
+                </div>
+
+                <div class="menu-item-with-details">
+                    <div class="question-row">
+                        <span>১২. কেউ টাকা বা অন্য কোনো কিছুর বিনিময়ে রক্ত চাইলে কী করব?</span>
+                        <button class="answer-toggle-btn" onclick="toggleDetails(this)">উত্তর দেখুন</button>
+                    </div>
+                    <div class="item-details">
+                        <p class="muted">আমাদের কমিউনিটি **নিঃস্বার্থ রক্তদানকে** উৎসাহিত করে। কোনো প্রকার আর্থিক লেনদেন বা বিনিময়ের প্রস্তাব দেওয়া বা নেওয়া এই অ্যাপে নিষিদ্ধ। যদি এমন কিছু দেখেন, অনুগ্রহ করে রিপোর্ট করুন।</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</section>
+      </div>
+      
+    </section>
+    
+  </main>
+  <footer class="app-footer" role="navigation" aria-label="Footer">
+  	<div id="navHome" class="nav-btn active" title="Home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div class="small" id="navHomeText">Home</div>
+    </div>
+    
+    <div id="navSearch" class="nav-btn" title="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div class="small" id="navSearchText">Search</div>
+    </div>
+    <div id="navAdd" class="nav-btn" title="Add">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div class="small" id="navAddText">Add</div>
+    </div>
+   <div id="navEmergency" class="nav-btn" title="হাব (Hub)">
+      <svg id="emergencyIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      
+      <div class="small" id="navEmergencyText">Emergency</div>
+    </div> 
+<div id="navShop" class="nav-btn" title="Shop">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag">
+    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <path d="M16 10a4 4 0 0 1-8 0"></path>
+  </svg>
+  <div class="small" id="navShopText">Shop</div>
+</div>
+<div id="navProfile" class="nav-btn" title="Profile">
+      <div id="profileIconContainer">
+        <svg width="20" height="20" viewBox="0 0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div class="small" id="navProfileText">Profile</div>
+    </div>
+
+
+  </footer>
+</div>
+<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div id="modalContent"></div>
+  </div>
+</div>
+<div id="customCalendarModal" class="custom-calendar-modal" aria-hidden="true">
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <button id="prevMonthBtn">‹</button>
+      <h4 id="calendarMonthYear">RESCUES Calendar - </h4>
+      <button id="nextMonthBtn">›</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px;gap:8px">
+      <button class="btn ghost small" id="clearDateBtn">Clear Date</button>
+      <button class="btn ghost small" onclick="closeCalendarModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+// Firebase Config and Initial Setup (Unchanged)
+const firebaseConfig = {
+  apiKey: "AIzaSyDtFcTxfwB2tkfVx0MpnFZKpd7ibSqYudU",
+  authDomain: "blood-bfa8c.firebaseapp.com",
+  projectId: "blood-bfa8c",
+  storageBucket: "blood-bfa8c.appspot.com",
+  messagingSenderId: "460305345299",
+  appId: "1:460305345299:web:1f07370c34a61755a748e6",
+  measurementId: "G-ZJMLVH8XN0",
+  databaseURL: "https://blood-bfa8c-default-rtdb.firebaseio.com"
+};
+firebase.initializeApp(firebaseConfig);
+
+// DOM Elements
+const loadingScreen = document.getElementById('loadingScreen');
+const app = document.getElementById('app');
+const menuBtn = document.getElementById('menuBtn');
+const menuOverlay = document.getElementById('menuOverlay');
+const closeMenu = document.getElementById('closeMenu');
+const aboutBtn = document.getElementById('aboutBtn');
+const guidelinesBtn = document.getElementById('guidelinesBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalContent = document.getElementById('modalContent');
+const pages = {
+  home: document.getElementById('homePage'),
+  search: document.getElementById('searchPage'),
+  add: document.getElementById('addPage'),
+  profile: document.getElementById('profilePage'),
+  emergency: document.getElementById('emergencyPage'),
+  // নতুন যুক্ত:
+  shop: document.getElementById('shopPage') 
+};
+
+const donorsGrid = document.getElementById('donorsGrid');
+const searchGrid = document.getElementById('searchPage');
+const myDonorsGrid = document.getElementById('myDonors');
+const emergencyGrid = document.getElementById('emergencyGrid');
+const noData = document.getElementById('noData');
+const noMyDonors = document.getElementById('noMyDonors');
+const noSearch = document.getElementById('noSearch');
+const noEmergencyPosts = document.getElementById('noEmergencyPosts');
+// ...
+const navProfile = document.getElementById('navProfile');
+const navEmergency = document.getElementById('navEmergency');
+// নতুন যুক্ত:
+const navShop = document.getElementById('navShop'); 
+
+// ...
+
+const emergencyIcon = document.getElementById('emergencyIcon');
+const profileIconContainer = document.getElementById('profileIconContainer');
+const searchInput = document.getElementById('searchInput');
+const clearSearch = document.getElementById('clearSearch');
+const addPlus = document.getElementById('addPlus');
+const userBadge = document.getElementById('userBadge');
+const logoutReasonModal = document.getElementById('logoutReasonModal');
+const logoutReasonInput = document.getElementById('logoutReasonInput');
+const logoutReasonSubmit = document.getElementById('logoutReasonSubmit');
+const customCalendarModal = document.getElementById('customCalendarModal');
+const calendarMonthYear = document.getElementById('calendarMonthYear');
+const calendarGrid = document.getElementById('calendarGrid');
+const prevMonthBtn = document.getElementById('prevMonthBtn');
+const nextMonthBtn = document.getElementById('nextMonthBtn');
+const clearDateBtn = document.getElementById('clearDateBtn');
+const donorsLoginPrompt = document.getElementById('donorsLoginPrompt');
+const donorsRefreshPrompt = document.getElementById('donorsRefreshPrompt');
+
+let donors = {};
+let users = {};
+let allEmergencyPosts = {};
+let currentUser = null;
+let donorsRef = firebase.database().ref('donors');
+let usersRef = firebase.database().ref('users');
+let emergencyRef = firebase.database().ref('emergencyPosts');
+let appRatingsRef = firebase.database().ref('appRatings');
+
+let activeDateInput = null;
+let currentCalendarDate = new Date();
+
+// NEW: Theme and Language Handlers
+const themeChangeBtn = document.getElementById('themeChangeBtn');
+const languageChangeBtn = document.getElementById('languageChangeBtn');
+const currentThemeSpan = document.getElementById('currentTheme');
+const currentLangSpan = document.getElementById('currentLang');
+let currentTheme = localStorage.getItem('theme') || 'dark'; // Default to dark
+let currentLang = localStorage.getItem('lang') || 'bn'; // Default to Bengali
+
+// Language translation object (unchanged)
+const translations = {
+    bn: {
+        brandSubtitle: 'রক্তের সহায়তা',
+        navEmergencyText: 'জরুরি',
+        navSearchText: 'খুঁজুন',
+        navHomeText: 'হোম',
+        // ...
+        navAddText: 'যোগ করুন',
+        navProfileText: 'প্রোফাইল',
+        // নতুন যুক্ত:
+        navShopText: 'পণ্য', 
+        aboutMenuTitle: 'আমাদের কথা',
+// ...
+
+        aboutMenuSubtitle: 'অ্যাপের কাজ ও উদ্দেশ্য',
+        guidelinesMenuTitle: 'নিয়মাবলী',
+        guidelinesMenuSubtitle: 'ডোনারের সাথে আচরণ',
+        themeMenuTitle: 'থিম পরিবর্তন',
+        themeMenuSubtitle: 'Dark / Light Mode',
+        languageMenuTitle: 'ভাষা পরিবর্তন',
+        languageMenuSubtitle: 'বাংলা / English',
+        logoutMenuTitle: 'লগআউট',
+        logoutMenuSubtitle: 'অ্যাকাউন্ট থেকে বের হয়ে যান',
+        logoutModalTitle: 'লগআউট',
+        logoutModalSubtitle: 'কেনো লগআউট করতে চাচ্ছেন? (ঐচ্ছিক)',
+        logoutCancelBtn: 'বাতিল',
+        logoutReasonPlaceholder: 'আপনার কারণ লিখুন...',
+        logoutBtnText: 'লগআউট',
+        homePageTitle: 'হোম',
+        homePageSubtitle: 'সকল ডোনার',
+        searchPlaceholder: 'জেলা বা শহরের নাম দিয়ে খুঁজুন.....',
+        noSearchResult: 'রিফ্রেশ করুন',
+        addPagePrompt: 'নতুন ডোনার যোগ করতে নিচের প্লাস আইকনে চাপ দিন',
+        addPageSubtitle: 'নিজে রক্ত দান করুন এবং অন্যদের রক্ত দানে উৎসাহিত করুন',
+        profilePageTitle: 'প্রোফাইল',
+        myDonorsTitle: 'আপনার যুক্ত করা ডোনার',
+        noMyDonors: 'তুমি এখনও কোনো ডোনার যোগ করোনি।',
+        emergencyPageTitle: 'জরুরী পোস্ট',
+        noEmergencyPosts: 'কোনো ইমার্জেন্সি পোস্ট নেই।',
+        loginPromptText: 'ডোনার ডেটা দেখতে দয়া করে লগইন করুন।',
+        loginPromptBtn: 'লগইন করুন',
+        refreshBtn: 'রিফ্রেশ করুন',
+        contactHeader: 'যোগাযোগ',
+        eligibleNow: 'Eligible Now',
+        daysLeft: 'দিন বাকি',
+        call: 'কল করুন',
+        callLocked: 'কল লকড-দেখুন কেনো?',
+        noPhone: 'নম্বর নেই',
+        lastDonate: 'শেষ দান',
+        edit: 'এডিট',
+        delete: 'মুছুন',
+    },
+    en: {
+        brandSubtitle: 'Blood Assistance',
+        navEmergencyText: 'Urgent',
+        navSearchText: 'Search',
+        navHomeText: 'Home',
+        // ...
+        navAddText: 'Add',
+        navProfileText: 'Profile',
+        // নতুন যুক্ত:
+        navShopText: 'Shop',
+        aboutMenuTitle: 'About Us',
+// ...
+
+        aboutMenuSubtitle: 'App functions and goals',
+        guidelinesMenuTitle: 'Guidelines',
+        guidelinesMenuSubtitle: 'Donor etiquette',
+        themeMenuTitle: 'Change Theme',
+        themeMenuSubtitle: 'Dark / Light Mode',
+        languageMenuTitle: 'Change Language',
+        languageMenuSubtitle: 'বাংলা / English',
+        logoutMenuTitle: 'Logout',
+        logoutMenuSubtitle: 'Log out from the account',
+        logoutModalTitle: 'Logout',
+        logoutModalSubtitle: 'Why are you logging out? (Optional)',
+        logoutCancelBtn: 'Cancel',
+        logoutReasonPlaceholder: 'Enter your reason...',
+        logoutBtnText: 'Logout',
+        homePageTitle: 'Home',
+        homePageSubtitle: 'All Donors',
+        searchPlaceholder: 'Search With Town Or Zila Name.....',
+        noSearchResult: 'Please Refresh.',
+        addPagePrompt: 'Tap the plus icon below to add a new donor',
+        addPageSubtitle: 'Donate yourself and encourage others',
+        profilePageTitle: 'Profile',
+        myDonorsTitle: 'Your Added Donors',
+        noMyDonors: 'You haven\'t added any donors yet.',
+        emergencyPageTitle: 'Emergency Posts',
+        noEmergencyPosts: 'No emergency posts found.',
+        loginPromptText: 'Please log in to view donor data.',
+        loginPromptBtn: 'Log In',
+        refreshBtn: 'Refresh',
+        contactHeader: 'Contact Us',
+        eligibleNow: 'Eligible Now',
+        daysLeft: 'Days Left',
+        call: 'Call',
+        callLocked: 'Call Locked-see way?',
+        noPhone: 'No Phone',
+        lastDonate: 'Last Donate',
+        edit: 'Edit',
+        delete: 'Delete',
+    }
+};
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('lang', lang);
+    const t = translations[lang];
+    
+    // Header/Footer Navigation
+    document.getElementById('brandSubtitle').textContent = t.brandSubtitle;
+    document.getElementById('navEmergencyText').textContent = t.navEmergencyText;
+    document.getElementById('navSearchText').textContent = t.navSearchText;
+    // ...
+    document.getElementById('navHomeText').textContent = t.navHomeText;
+    document.getElementById('navAddText').textContent = t.navAddText;
+    document.getElementById('navProfileText').textContent = t.navProfileText;
+    // নতুন যুক্ত:
+    document.getElementById('navShopText').textContent = t.navShopText; 
+    
+    // Menu
+// ...
+
+    
+    // Menu
+    document.getElementById('aboutMenuTitle').textContent = t.aboutMenuTitle;
+    document.getElementById('aboutMenuSubtitle').textContent = t.aboutMenuSubtitle;
+    document.getElementById('guidelinesMenuTitle').textContent = t.guidelinesMenuTitle;
+    document.getElementById('guidelinesMenuSubtitle').textContent = t.guidelinesMenuSubtitle;
+    document.getElementById('themeMenuTitle').textContent = t.themeMenuTitle;
+    document.getElementById('themeMenuSubtitle').textContent = t.themeMenuSubtitle;
+    document.getElementById('languageMenuTitle').textContent = t.languageMenuTitle;
+    document.getElementById('languageMenuSubtitle').textContent = t.languageMenuSubtitle;
+    document.getElementById('currentLang').textContent = lang === 'bn' ? 'বাংলা' : 'English';
+    document.getElementById('logoutMenuTitle').textContent = t.logoutMenuTitle;
+    document.getElementById('logoutMenuSubtitle').textContent = t.logoutMenuSubtitle;
+    
+    // Pages
+    document.getElementById('homePageTitle').textContent = t.homePageTitle;
+    document.getElementById('homePageSubtitle').textContent = t.homePageSubtitle;
+    document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+    document.getElementById('noSearch').textContent = t.noSearchResult;
+    document.getElementById('addPagePrompt').textContent = t.addPagePrompt;
+    document.getElementById('addPageSubtitle').textContent = t.addPageSubtitle;
+    document.getElementById('profilePageTitle').textContent = t.profilePageTitle;
+    document.getElementById('myDonorsTitle').textContent = t.myDonorsTitle;
+    document.getElementById('noMyDonors').textContent = t.noMyDonors;
+    document.getElementById('emergencyPageTitle').textContent = t.emergencyPageTitle;
+    document.getElementById('noEmergencyPosts').textContent = t.noEmergencyPosts;
+    document.getElementById('loginPromptText').textContent = t.loginPromptText;
+    document.getElementById('loginPromptBtn').textContent = t.loginPromptBtn;
+    document.getElementById('refreshBtn').textContent = t.refreshBtn;
+    document.getElementById('contactHeader').textContent = t.contactHeader;
+
+    // Logout Modal
+    document.getElementById('logoutModalTitle').textContent = t.logoutModalTitle;
+    document.getElementById('logoutModalSubtitle').textContent = t.logoutModalSubtitle;
+    document.getElementById('logoutReasonInput').placeholder = t.logoutReasonPlaceholder;
+    document.getElementById('logoutCancelBtn').textContent = t.logoutCancelBtn;
+    document.getElementById('logoutReasonSubmit').textContent = t.logoutBtnText;
+
+    // Re-render dynamic content (donor cards, etc.)
+    renderAll();
+}
+
+function setAppTheme(theme) {
+    currentTheme = theme;
+    localStorage.setItem('theme', theme);
+    document.body.classList.remove('dark-mode', 'light-mode');
+    document.body.classList.add(theme + '-mode');
+    currentThemeSpan.textContent = theme === 'dark' ? 'Dark' : 'Light';
+}
+
+// Initial setup
+setAppTheme(currentTheme);
+setLanguage(currentLang);
+
+// Menu Handlers
+themeChangeBtn.addEventListener('click', () => {
+    closeMenuFunc();
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setAppTheme(newTheme);
+});
+
+languageChangeBtn.addEventListener('click', () => {
+    closeMenuFunc();
+    const newLang = currentLang === 'bn' ? 'en' : 'bn';
+    setLanguage(newLang);
+});
+
+function fmtDate(d){ const dt = new Date(d); if(isNaN(dt)) return "-"; return dt.toLocaleDateString(); }
+function daysBetween(a,b){ return Math.ceil((a - b)/(1000*60*60*24)); } 
+function uidInitials(name){ if(!name) return "?"; return name.trim().split(" ").map(s=>s[0]?.toUpperCase()).slice(0,2).join(""); }
+function escapeHtml(unsafe) {
+  if (unsafe === undefined || unsafe === null) return '';
+  return String(unsafe)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+function formatInputDate(iso){ if(!iso) return ''; const d = new Date(iso); const y = d.getFullYear(); const m = String(d.getMonth()+1).padStart(2,'0'); const day = String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
+function renderStars(rating){
+  let stars = '';
+  const roundedRating = Math.round(rating * 2) / 2; // Round to nearest 0.5
+  for(let i=1; i<=5; i++){
+    const color = i <= roundedRating ? '#f5b041' : (i - 0.5 === roundedRating ? 'linear-gradient(to right, #f5b041 50%, var(--muted) 50%)' : 'var(--muted)');
+    
+    if (i - 0.5 === roundedRating) {
+        // Half star placeholder. A real implementation would use a better icon/method.
+        stars += `<span class="rating-star" style="color: #f5b041; position:relative;">
+                    ★
+                    <span style="position:absolute; left:0; overflow:hidden; width:50%; color:var(--muted);">★</span>
+                  </span>`;
+    } else {
+        stars += `<span class="rating-star" style="color: ${i <= roundedRating ? '#f5b041' : 'var(--muted)'}">★</span>`;
+    }
+  }
+  return stars;
+}
+function openModal(html){ modalContent.innerHTML = html; modalBackdrop.classList.add('visible'); modalBackdrop.setAttribute('aria-hidden','false'); }
+function closeModal(){ modalBackdrop.classList.remove('visible'); modalBackdrop.setAttribute('aria-hidden','true'); }
+modalBackdrop.addEventListener('click', (e)=> { if(e.target === modalBackdrop) closeModal(); });
+menuBtn.addEventListener('click', ()=> {
+  menuOverlay.classList.add('visible');
+  menuOverlay.setAttribute('aria-hidden','false');
+});
+closeMenu.addEventListener('click', ()=> {
+  menuOverlay.classList.remove('visible');
+  menuOverlay.setAttribute('aria-hidden','true');
+});
+function closeMenuFunc(){ menuOverlay.classList.remove('visible'); menuOverlay.setAttribute('aria-hidden','true'); }
+function setActivePage(name){
+  const currentActivePage = document.querySelector('.page.active');
+  const nextActivePage = pages[name];
+  if (currentActivePage === nextActivePage) {
+      return;
+  }
+  if (currentActivePage) {
+      currentActivePage.classList.remove('active');
+      setTimeout(() => {
+          currentActivePage.style.display = 'none';
+      }, 400);
+  }
+  nextActivePage.style.display = 'block';
+  setTimeout(() => {
+      nextActivePage.classList.add('active');
+  }, 10);
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if(name === 'home') navHome.classList.add('active');
+  if(name === 'search') navSearch.classList.add('active');
+  // ...
+  if(name === 'add') navAdd.classList.add('active');
+  if(name === 'profile') navProfile.classList.add('active');
+  if(name === 'emergency') navEmergency.classList.add('active');
+  // নতুন যুক্ত:
+  if(name === 'shop') navShop.classList.add('active'); 
+}
+
+navHome.addEventListener('click', () => setActivePage('home'));
+navSearch.addEventListener('click', () => {
+    if (currentUser) {
+        setActivePage('search');
+    } else {
+        openAuthModal('login');
+    }
+});
+navAdd.addEventListener('click', () => {
+    if (currentUser) {
+        setActivePage('add');
+    } else {
+        openAuthModal('login');
+    }
+});
+navEmergency.addEventListener('click', () => {
+    setActivePage('emergency');
+});
+navProfile.addEventListener('click', () => {
+    if (currentUser) {
+        setActivePage('profile');
+    } else {
+        openAuthModal('login');
+    }
+});
+
+// নতুন যুক্ত: Shop Navigation
+navShop.addEventListener('click', () => {
+    // এই সেকশনের জন্য কোনো লগইন চেক না থাকলে, সরাসরি setActivePage কল করা হলো।
+    setActivePage('shop'); 
+});
+
+setTimeout(()=> {
+  loadingScreen.style.opacity = 0;
+  setTimeout(()=> { loadingScreen.style.display='none'; app.style.display='block'; app.setAttribute('aria-hidden','false'); }, 220);
+}, 4300);
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    currentUser = { uid: user.uid, email: user.email, displayName: user.displayName || user.email };
+    userBadge.style.display = 'inline-block';
+    userBadge.textContent = currentUser.displayName || currentUser.email;
+    logoutBtn.style.display = 'flex';
+    profileIconContainer.innerHTML = `<div style="width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--white);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;">${uidInitials(currentUser.displayName)}</div>`;
+
+    const userRef = firebase.database().ref(`users/${currentUser.uid}`);
+    userRef.once('value').then(snapshot => {
+      const userData = snapshot.val();
+      const loginCount = userData?.loginCount || 0;
+      const appRated = userData?.appRated || false;
+      const showRatingAfter = userData?.showRatingAfter || 0;
+      const now = Date.now();
+
+      if (!appRated && (loginCount >= 3 || now > showRatingAfter)) {
+        openAppRatingModal();
+        userRef.update({ 
+          loginCount: loginCount + 1,
+          showRatingAfter: now + 7 * 24 * 60 * 60 * 1000 
+        });
+      } else if (!appRated && loginCount < 3) {
+        userRef.update({ loginCount: loginCount + 1 });
+      }
+    });
+
+  } else {
+    currentUser = null;
+    userBadge.style.display = 'none';
+    logoutBtn.style.display = 'none';
+    profileIconContainer.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
+  }
+  loadAndRenderDonors();
+});
+donorsRef.on('value', snapshot => {
+  donors = snapshot.val() || {};
+  renderAll();
+});
+usersRef.on('value', snapshot => {
+  users = snapshot.val() || {};
+  renderAll();
+});
+async function addEmergencyPost(post) {
+  if (!currentUser) return alert('এই ফিচারটি ব্যবহার করার জন্য লগইন করুন।');
+  const postId = 'em_' + Date.now();
+  const newPostData = {
+    ...post,
+    user: currentUser.uid,
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
+    expiresAt: Date.now() + 24 * 60 * 60 * 1000
+  };
+  await emergencyRef.child(postId).set(newPostData);
+}
+async function updateEmergencyPost(postId, post) {
+    if (!currentUser) return alert('এই ফিচারটি ব্যবহার করার জন্য লগইন করুন।');
+    const existingPost = allEmergencyPosts[postId];
+    if (!existingPost || existingPost.user !== currentUser.uid) {
+        alert('এই পোস্টটি আপডেট করার অনুমতি নেই।');
+        return;
+    }
+    await emergencyRef.child(postId).update({
+        ...post,
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+    });
+}
+async function deleteEmergencyPost(postId) {
+  if (!currentUser) return alert('লগইন করুন।');
+  const post = allEmergencyPosts[postId];
+  if (!post || post.user !== currentUser.uid) {
+    alert('এই পোস্টটি মুছে ফেলার অনুমতি নেই।');
+    return;
+  }
+  if (!confirm('আপনি কি এই ইমার্জেন্সি পোস্টটি মুছে ফেলতে চান?')) return;
+  await emergencyRef.child(postId).remove();
+  alert('ইমার্জেন্সি পোস্ট সফলভাবে মুছে ফেলা হয়েছে।');
+}
+emergencyRef.on('value', snapshot => {
+  const postsData = snapshot.val() || {};
+  allEmergencyPosts = {};
+  let hasActivePosts = false;
+  
+  for(const id in postsData) {
+      if(postsData[id].expiresAt > Date.now()) {
+          allEmergencyPosts[id] = postsData[id];
+          hasActivePosts = true;
+      } else {
+          emergencyRef.child(id).remove();
+      }
+  }
+  if (hasActivePosts) {
+      navEmergency.classList.add('has-emergency');
+  } else {
+      navEmergency.classList.remove('has-emergency');
+  }
+  renderAll();
+});
+
+function openEmergencyPostModal(postId = null) {
+  if (!currentUser) {
+    openAuthModal('login');
+    return;
+  }
+  const isEdit = postId !== null;
+  const payload = isEdit && allEmergencyPosts[postId] ? allEmergencyPosts[postId] : {};
+  openModal(`
+    <div class="auth-form-container">
+      <h3>🚨 ইমার্জেন্সি পোস্ট</h3>
+      <p class="muted" style="text-align: center;">রক্তের জরুরি প্রয়োজনের জন্য পোস্ট করুন। পোস্টটি ২৪ ঘণ্টা থাকবে।</p>
+      
+      <div class="input-group">
+        <label>রক্তের গ্রুপ</label>
+        <select id="emBlood">
+          <option value="A+" ${payload.blood === 'A+' ? 'selected' : ''}>A+</option>
+          <option value="A-" ${payload.blood === 'A-' ? 'selected' : ''}>A-</option>
+          <option value="B+" ${payload.blood === 'B+' ? 'selected' : ''}>B+</option>
+          <option value="B-" ${payload.blood === 'B-' ? 'selected' : ''}>B-</option>
+          <option value="O+" ${payload.blood === 'O+' ? 'selected' : ''}>O+</option>
+          <option value="O-" ${payload.blood === 'O-' ? 'selected' : ''}>O-</option>
+          <option value="AB+" ${payload.blood === 'AB+' ? 'selected' : ''}>AB+</option>
+          <option value="AB-" ${payload.blood === 'AB-' ? 'selected' : ''}>AB-</option>
+        </select>
+      </div>
+      
+      <div class="input-group">
+        <label>রোগীর নাম</label>
+        <input id="emPatientName" type="text" value="${escapeHtml(payload.patientName || '')}" placeholder="রোগীর নাম"/>
+      </div>
+      
+      <div class="input-group">
+        <label>ঠিকানা / হাসপাতালের নাম</label>
+        <input id="emPatientAddress" type="text" value="${escapeHtml(payload.patientAddress || payload.location || '')}" placeholder="যেখানে রক্ত লাগবে, তার ঠিকানা"/>
+      </div>
+      <div class="input-group">
+        <label>রোগীর অবস্থা ও প্রয়োজন</label>
+        <textarea id="emDetails" rows="3" placeholder="কোথায়, কখন, কতটুকু রক্ত প্রয়োজন, রোগীর অবস্থা ইত্যাদি">${escapeHtml(payload.details || '')}</textarea>
+      </div>
+      <div class="input-group">
+        <label>যোগাযোগের নম্বর</label>
+        <input id="emPhone" type="tel" value="${escapeHtml(payload.phone || '')}" placeholder="ফোন নম্বর"/>
+      </div>
+      <div class="btn-group" style="justify-content:flex-end;">
+        <button class="btn ghost" onclick="closeModal()">বাতিল</button>
+        <button class="btn primary" id="postEmergencyBtn">${isEdit ? 'আপডেট করুন' : 'পোস্ট করুন'}</button>
+      </div>
+    </div>
+  `);
+  setTimeout(() => {
+    document.getElementById('postEmergencyBtn').onclick = async () => {
+      const newPayload = {
+        blood: document.getElementById('emBlood').value,
+        patientName: document.getElementById('emPatientName').value.trim(),
+        // 🌟 সংশোধিত অংশ: ঠিকানা ডেটা সংগ্রহ করা হলো
+        patientAddress: document.getElementById('emPatientAddress').value.trim(), 
+        details: document.getElementById('emDetails').value.trim(),
+        phone: document.getElementById('emPhone').value.trim(),
+      };
+      if (!newPayload.blood || !newPayload.details || !newPayload.phone) {
+        alert('সকল ফিল্ড পূরণ করা আবশ্যক।');
+        return;
+      }
+      try {
+        if(isEdit) {
+            await updateEmergencyPost(postId, newPayload);
+            alert('ইমার্জেন্সি পোস্ট সফলভাবে আপডেট হয়েছে!');
+        } else {
+            await addEmergencyPost(newPayload);
+            alert('ইমার্জেন্সি পোস্ট সফলভাবে যুক্ত হয়েছে!');
+        }
+        closeModal();
+      } catch (e) {
+        alert('পোস্ট করতে সমস্যা হয়েছে: ' + (e.message || e));
+      }
+    };
+  }, 50);
+}
+
+async function registerUser(name,email,password){
+  const cred = await firebase.auth().createUserWithEmailAndPassword(email,password);
+  await cred.user.updateProfile({ displayName: name });
+  await firebase.database().ref('users/' + cred.user.uid).set({ name, email, joined: Date.now(), loginCount: 0 });
+  return cred.user;
+}
+async function loginUser(email,password){
+  const u = await firebase.auth().signInWithEmailAndPassword(email,password);
+  return u.user;
+}
+async function logoutUser(){
+  await firebase.auth().signOut();
+}
+async function addDonor(donor){
+  const id = donor.id || ('d_' + Date.now() + '_' + Math.floor(Math.random()*9999));
+  donor.id = id; donor.owner = currentUser ? currentUser.uid : null; donor.createdAt = donor.createdAt || Date.now();
+  await firebase.database().ref('donors/' + id).set(donor);
+}
+async function updateDonor(id,payload){
+  await firebase.database().ref('donors/' + id).update(payload);
+}
+async function deleteDonor(id){
+  if(!confirm('ডোনার মুছে ফেলতে চান?')) return;
+  await firebase.database().ref('donors/' + id).remove();
+}
+function openRatingModal(donorId){
+  if(!currentUser){
+    openAuthModal('login');
+    return;
+  }
+  const d = donors[donorId];
+  if(!d) return;
+  const userRatings = Object.values(d.ratings || {}).filter(r => r.rater === currentUser.uid);
+  if(userRatings.length > 0){
+    openModal(`
+      <h3>You've Already Rated</h3>
+      <p class="muted">তুমি এই ডোনারকে একবার রেটিং দিয়েছ। একাধিকবার রেটিং দেওয়া যাবে না।</p>
+      <div style="margin-top:12px;text-align:center">
+        ${renderStars(userRatings[0].rating)}
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button class="btn ghost" onclick="closeModal()">Close</button>
+      </div>
+    `);
+    return;
+  }
+  openModal(`
+    <h3>Rate ${escapeHtml(d.name)}</h3>
+    <div style="margin-top:12px;text-align:center">
+      <div id="ratingStars" class="ratings" style="font-size:36px;cursor:pointer;">
+        <span data-rating="1">★</span><span data-rating="2">★</span><span data-rating="3">★</span><span data-rating="4">★</span><span data-rating="5">★</span>
+      </div>
+    </div>
+    <div style="margin-top:16px;">
+      <label class="muted small">Your feedback (optional)</label>
+      <textarea id="ratingComment" rows="3" style="width:100%;border-radius:8px;padding:8px;border:1px solid var(--glass-border);background:var(--bg);color:var(--text-color)"></textarea>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+
+      <div style="display:flex;gap:8px;margin-left:auto">
+        <button class="btn ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn primary" id="submitRatingBtn">Submit Rating</button>
+      </div>
+    </div>
+  `);
+  // Apply theme-specific styles to the textarea in the modal dynamically
+  const ratingCommentTextarea = document.getElementById('ratingComment');
+  if (currentTheme === 'light') {
+    ratingCommentTextarea.style.background = '#f8fafc';
+    ratingCommentTextarea.style.border = '1px solid rgba(0,0,0,0.15)';
+  } else {
+    ratingCommentTextarea.style.background = 'var(--bg)';
+    ratingCommentTextarea.style.border = '1px solid var(--glass-border)';
+  }
+
+  const starsContainer = document.getElementById('ratingStars');
+  let selectedRating = 0;
+  starsContainer.addEventListener('mouseover', (e) => {
+    if(e.target.tagName === 'SPAN'){
+      const rating = parseInt(e.target.dataset.rating);
+      Array.from(starsContainer.children).forEach(star => {
+        const starRating = parseInt(star.dataset.rating);
+        star.style.color = starRating <= rating ? '#f5b041' : 'var(--muted)';
+      });
+    }
+  });
+  starsContainer.addEventListener('mouseout', () => {
+    Array.from(starsContainer.children).forEach(star => {
+      const starRating = parseInt(star.dataset.rating);
+      star.style.color = starRating <= selectedRating ? '#f5b041' : 'var(--muted)';
+    });
+  });
+  starsContainer.addEventListener('click', (e) => {
+    if(e.target.tagName === 'SPAN'){
+      selectedRating = parseInt(e.target.dataset.rating);
+      Array.from(starsContainer.children).forEach(star => {
+        const starRating = parseInt(star.dataset.rating);
+        star.style.color = starRating <= selectedRating ? '#f5b041' : 'var(--muted)';
+      });
+    }
+  });
+  document.getElementById('submitRatingBtn').addEventListener('click', async () => {
+    if(selectedRating === 0){
+      alert('রেটিং দিন!');
+      return;
+    }
+    const comment = document.getElementById('ratingComment').value.trim();
+    try {
+      await firebase.database().ref(`donors/${donorId}/ratings`).push({
+        rating: selectedRating,
+        comment: comment,
+        rater: currentUser.uid,
+        timestamp: Date.now()
+      });
+      alert('রেটিং সফলভাবে জমা হয়েছে!');
+      closeModal();
+    } catch (error) {
+      alert('রেটিং দিতে সমস্যা হয়েছে: ' + error.message);
+    }
+  });
+}
+function calculateAverageRating(donor){
+  if(!donor.ratings) return { avg: 0, count: 0 };
+  const ratings = Object.values(donor.ratings);
+  const sum = ratings.reduce((acc, curr) => acc + (curr.rating || 0), 0);
+  const avg = ratings.length > 0 ? (sum / ratings.length) : 0;
+  return { avg: avg.toFixed(1), count: ratings.length };
+}
+function openDonorDetailsModal(donorId) {
+  const d = donors[donorId];
+  if (!d) return;
+  const { avg, count } = calculateAverageRating(d);
+  const ratingsList = d.ratings ? Object.values(d.ratings) : [];
+  const reviewsHtml = ratingsList.map(r => {
+    const raterName = users[r.rater] ? users[r.rater].name : 'Anonymous';
+    return `
+      <div class="review-card">
+        <div class="review-header">
+          <div>${renderStars(r.rating)}</div>
+          <div class="review-meta">${escapeHtml(raterName)}</div>
+        </div>
+        <div class="muted" style="margin-top:6px">${escapeHtml(r.comment || 'No comment')}</div>
+      </div>
+    `;
+  }).join('');
+  openModal(`
+    <h3>${escapeHtml(d.name)}</h3>
+    <div style="margin-top:10px; display:flex; gap:12px; align-items:center;">
+      <div class="avatar" style="width: 80px; height: 80px; font-size: 28px;">${uidInitials(d.name)}</div>
+      <div>
+        <div class="blood-group">${escapeHtml(d.blood || 'N/A')}</div>
+        <div class="meta">${escapeHtml(d.location || '')}</div>
+        <div class="muted small">${translations[currentLang].lastDonate} : ${d.lastDonateDate ? fmtDate(d.lastDonateDate) : 'N/A'}</div>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <h4 style="margin:0">Overall Rating: ${avg}/5 (${count} reviews)</h4>
+      <div class="ratings" style="margin-top:4px">${renderStars(avg)}</div>
+    </div>
+    <div style="margin-top:16px">
+      <h4 style="margin:0">Reviews</h4>
+      <div style="margin-top:8px; max-height: 200px; overflow-y: auto; padding-right: 5px;">${reviewsHtml || '<div class="muted">কোনো রিভিউ নেই।</div>'}</div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+      <button class="btn ghost" onclick="closeModal()">Close</button>
+      <button class="btn primary" onclick="openRatingModal('${d.id}')">Rate This Donor</button>
+    </div>
+  `);
+}
+function renderAll(){
+  renderDonorsGrid();
+  renderSearchGrid();
+  renderMyDonors();
+  renderProfile();
+  renderEmergencyPosts();
+}
+function renderDonorsGrid(){
+    donorsGrid.innerHTML = '';
+    
+    // Check user login and data existence
+    if (!currentUser) {
+        donorsLoginPrompt.style.display = 'block';
+        donorsRefreshPrompt.style.display = 'none';
+        noData.style.display = 'none';
+        return;
+    } else {
+        donorsLoginPrompt.style.display = 'none';
+        
+        const arr = Object.values(donors || {}).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        
+        if (arr.length === 0) {
+            donorsRefreshPrompt.style.display = 'block';
+            noData.textContent = translations[currentLang].noSearchResult;
+            noData.style.display = 'block';
+        } else {
+            donorsRefreshPrompt.style.display = 'none';
+            noData.style.display = 'none';
+            
+            // Render the latest emergency post at the top
+            const latestEmergencyPost = Object.values(allEmergencyPosts).sort((a,b)=>b.timestamp - a.timestamp)[0];
+            if (latestEmergencyPost) {
+                const postEl = document.createElement('div');
+                postEl.className = 'emergency-card';
+                postEl.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h3 style="margin: 0; color: white;">🚨 জরুরি রক্তের প্রয়োজন!</h3>
+                        <div class="blood-group-large">${latestEmergencyPost.blood}</div>
+                    </div>
+                    <p style="margin: 0; font-size: 16px;">
+                        <span style="font-weight: 600;">রোগী:</span> ${escapeHtml(latestEmergencyPost.patientName)}<br>
+                        <span style="font-weight: 600;">ঠিকানা:</span> ${escapeHtml(latestEmergencyPost.patientAddress || latestEmergencyPost.location || 'দেওয়া হয়নি')}<br>
+                        <span style="font-weight: 600;">বিস্তারিত:</span> ${escapeHtml(latestEmergencyPost.details)}
+                    </p>
+                    <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <a href="tel:${encodeURIComponent(latestEmergencyPost.phone)}" class="btn ghost" style="color: white; border-color: rgba(255,255,255,0.4);">যোগাযোগ করুন</a>
+                        <div style="font-size: 12px; opacity: 0.7;">পোস্ট করেছেন: ${users[latestEmergencyPost.user] ? users[latestEmergencyPost.user].name : 'Unknown User'}</div>
+                    </div>
+                `;
+                donorsGrid.appendChild(postEl);
+            }
+            
+            arr.forEach(d => donorsGrid.appendChild(renderCard(d)));
+        }
+    }
+}
+function renderSearchGrid(){
+  const q = (searchInput && searchInput.value || '').trim().toLowerCase();
+  searchGrid.querySelector('.grid').innerHTML = ''; // Clear the grid for search results
+  
+  // Only proceed if user is logged in
+  if (!currentUser) {
+      // Prompt will be visible from the main page when not logged in. No need to show another prompt here.
+      return; 
+  }
+  
+  const arr = Object.values(donors || {}).sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  const filtered = arr.filter(d=>{
+    if(!q) return true;
+    return (d.name||'').toLowerCase().includes(q) || (d.location||'').toLowerCase().includes(q) || (d.blood||'').toLowerCase().includes(q) || (d.phone||'').toLowerCase().includes(q);
+  });
+  
+  if(filtered.length===0) noSearch.style.display='block'; else noSearch.style.display='none';
+  filtered.forEach(d => searchGrid.querySelector('.grid').appendChild(renderCard(d)));
+}
+function renderMyDonors(){
+  myDonorsGrid.innerHTML = '';
+  const arr = Object.values(donors || {}).filter(d => d.owner === (currentUser && currentUser.uid)).sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  if(arr.length===0) noMyDonors.style.display='block'; else noMyDonors.style.display='none';
+  arr.forEach(d => myDonorsGrid.appendChild(renderCard(d, false, true)));
+}
+function renderEmergencyPosts() {
+    emergencyGrid.innerHTML = '';
+    const posts = Object.entries(allEmergencyPosts).sort(([,a], [,b]) => b.timestamp - a.timestamp);
+    if (posts.length === 0) {
+        noEmergencyPosts.style.display = 'block';
+    } else {
+        noEmergencyPosts.style.display = 'none';
+        posts.forEach(([postId, post]) => {
+            const postEl = document.createElement('div');
+            postEl.className = 'emergency-card';
+            const isOwner = currentUser && post.user === currentUser.uid;
+            postEl.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h3 style="margin: 0; color: white;">🚨 জরুরি রক্তের প্রয়োজন!</h3>
+                <div class="blood-group-large">${post.blood}</div>
+              </div>
+              <p style="margin: 0; font-size: 16px;">
+                <span style="font-weight: 600;">রোগী:</span> ${escapeHtml(post.patientName)}<br>
+                <span style="font-weight: 600;">ঠিকানা:</span> ${escapeHtml(post.patientAddress || post.location || 'দেওয়া হয়নি')}<br>
+                <span style="font-weight: 600;">বিস্তারিত:</span> ${escapeHtml(post.details)}
+              </p>
+              <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <a href="tel:${encodeURIComponent(post.phone)}" class="btn ghost" style="color: white; border-color: rgba(255,255,255,0.4);">যোগাযোগ করুন</a>
+                <div style="font-size: 12px; opacity: 0.7;">পোস্ট করেছেন: ${users[post.user] ? users[post.user].name : 'Unknown User'}</div>
+              </div>
+              ${isOwner ? `
+              <div style="display:flex; gap:8px; margin-top:12px">
+                <button class="btn primary small" onclick="openEmergencyPostModal('${postId}')">${translations[currentLang].edit}</button>
+                <button class="btn ghost small" onclick="deleteEmergencyPost('${postId}')">${translations[currentLang].delete}</button>
+              </div>
+              ` : ''}
+            `;
+            emergencyGrid.appendChild(postEl);
+        });
+    }
+}
+function renderProfile(){
+  const container = document.getElementById('profileInfo');
+  if(!currentUser){
+    container.innerHTML = `<div class="auth-form-container"><h3>Login / Register</h3><p class="muted" style="text-align: center;">অ্যাক্সেস পেতে লগইন করুন</p><div style="display:flex;gap:8px;margin-top:10px;justify-content:center;"><button class="btn primary" onclick="openAuthModal('register')">Register</button><button class="btn ghost" onclick="openAuthModal('login')">Login</button></div></div>`;
+    return;
+  }
+  const name = currentUser.displayName || currentUser.email || 'User';
+  const userEmergencyPosts = Object.entries(allEmergencyPosts).filter(([, post]) => post.user === currentUser.uid);
+  const emergencyPostSection = userEmergencyPosts.length > 0 
+    ? `<div class="emergency-profile-card" style="padding:12px; border: 1px solid var(--glass-border); border-radius:12px; background: rgba(225,29,72,0.1);">
+         <h4 style="margin:0; color: var(--accent);">🚨 আপনার ইমার্জেন্সি পোস্ট (${userEmergencyPosts.length})</h4>
+         <p class="muted small" style="margin-top:4px;">আপনার পোস্ট দেখতে Emergency ট্যাবে যান।</p>
+         <div style="margin-top:8px; display:flex; gap:8px;">
+           <button class="btn primary small" onclick="setActivePage('emergency')">View Posts</button>
+         </div>
+       </div>`
+    : `<button class="btn emergency" style="width:100%;" onclick="openEmergencyPostModal()">🚨 ইমার্জেন্সি পোস্ট করুন</button>`;
+  container.innerHTML = `
+    <div style="display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--glass-border);background:var(--card); box-shadow: var(--shadow);">
+      <div style="width:60px;height:60px;border-radius:12px;background:var(--accent);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700">${uidInitials(name)}</div>
+      <div>
+        <h3 style="margin:0">${escapeHtml(name)}</h3>
+        <div class="muted small">${escapeHtml(currentUser.email||'')}</div>
+      </div>
+      <div style="margin-left:auto"><button class="btn ghost" onclick="openEditProfile()">Edit</button></div>
+    </div>
+    <div style="margin-top:16px">${emergencyPostSection}</div>
+  `;
+}
+function renderCard(d, showCall=false, showEdit=false){
+    const t = translations[currentLang];
+    const el = document.createElement('div');
+    el.className = 'card clickable';
+    el.onclick = () => openDonorDetailsModal(d.id);
+
+    const lastDate = d.lastDonateDate ? new Date(d.lastDonateDate) : null;
+    const nextEligible = lastDate ? new Date(lastDate.getTime() + 1000 * 60 * 60 * 24 * 120) : null; // 120 days = 4 months
+    const now = new Date();
+    const isEligible = !nextEligible || nextEligible <= now;
+    
+    let daysRemaining = 0;
+    if (nextEligible && nextEligible > now) {
+        daysRemaining = daysBetween(nextEligible, now);
+    }
+    
+    const { avg, count } = calculateAverageRating(d);
+
+    let callButtonHTML = '';
+    
+    if (d.phone) {
+        if (isEligible) {
+            // Eligible - show Call button
+            callButtonHTML = `
+                <a href="tel:${encodeURIComponent(d.phone)}" title="Call" class="btn ghost" style="display:inline-flex;align-items:center;gap:8px">
+                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2h-2.82a2 2 0 0 1-1.74-1.23L10.43 15a1 1 0 0 1 .4-1.42l3.41-2.28a1 1 0 0 1 1.41.4l.26.42a1 1 0 0 0 1.25.29l1.62-.97a2 2 0 0 1 2.38.35L22 16.92z"></path></svg>
+                    ${t.call}
+                </a>
+            `;
+        } else {
+            // Not Eligible - show Locked button
+            callButtonHTML = `
+                <button title="Not Eligible" class="btn locked" 
+                    onclick="event.stopPropagation(); showCountdownModal('${escapeHtml(d.name)}', ${daysRemaining})">
+                    <span style="font-size:14px;">🔒</span> 
+                    ${t.callLocked}
+                </button>
+            `;
+        }
+    } else {
+        callButtonHTML = `<div class="btn locked" style="cursor: default; opacity: 1;">${t.noPhone}</div>`;
+    }
+
+    el.innerHTML = `
+        <div class="avatar">${uidInitials(d.name)}</div>
+        <div class="card-body">
+            <div class="name-row">
+                <h4 style="margin:0">${escapeHtml(d.name || 'Unknown')}</h4>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <div class="tag ${isEligible ? 'eligible' : 'not-eligible'}">
+                        ${isEligible ? t.eligibleNow : daysRemaining > 0 ? `${daysRemaining} ${t.daysLeft}` : 'Not Eligible'}
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                <div class="meta">${escapeHtml(d.location || '')}</div>
+                <div class="ratings">${renderStars(avg)} <span class="muted small">${avg}/5</span> (${count})</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:12px">
+                <div>
+                    <div class="blood-group">${escapeHtml(d.blood || 'N/A')}</div>
+                    <div class="muted small">${t.lastDonate} : ${d.lastDonateDate ? fmtDate(d.lastDonateDate) : 'N/A'}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+                    ${callButtonHTML}
+                    ${showEdit && currentUser && d.owner===currentUser.uid 
+                        ? `<div style="display:flex;gap:8px">
+                             <button class="btn primary small" onclick="event.stopPropagation(); openEditDonor('${d.id}')">${t.edit}</button>
+                             <button class="btn ghost small" onclick="event.stopPropagation(); deleteDonor('${d.id}')">${t.delete}</button>
+                           </div>` 
+                        : ''}
+                </div>
+            </div>
+        </div>
+    `;
+    return el;
+}
+function showCountdownModal(name, daysRemaining) {
+    if (daysRemaining <= 0) {
+        openModal(`
+            <div class="auth-form-container">
+                <h3>কল অপশন লকড 🔒</h3>
+                <p class="muted" style="text-align: center;">এই ডোনার বর্তমানে রক্তদানের জন্য যোগ্য নন। তার শেষ রক্তদানের তারিখ আপডেট করা নেই বা অন্য কোনো কারণে তিনি অনুপযোগী।</p>
+                <div style="display:flex;justify-content:center;margin-top:12px;">
+                    <button class="btn primary" onclick="closeModal()">Got It</button>
+                </div>
+            </div>
+        `);
+        return;
+    }
+
+    openModal(`
+        <div class="auth-form-container" style="text-align: center; max-width: 320px;">
+            <h3>কল অপশন লকড 🔒</h3>
+            <p class="muted">ডোনার **${escapeHtml(name)}** রক্তদানের জন্য প্রস্তুত নন।</p>
+            <div style="font-size: 48px; font-weight: 800; color: var(--danger); margin: 20px 0;">
+                ${daysRemaining}
+            </div>
+            <p style="font-size: 18px; margin-top: -10px; font-weight: 600;">
+                দিন পর তিনি **Eligible** হবেন।
+            </p>
+            <p class="small muted">রক্তদানের নিরাপত্তা নিশ্চিত করতে কমপক্ষে ১২০ দিন বিরতি আবশ্যক।</p>
+            <div style="display:flex;justify-content:center;margin-top:12px;">
+                <button class="btn primary" onclick="closeModal()">বন্ধ করুন</button>
+            </div>
+        </div>
+    `);
+}
+window.showCountdownModal = showCountdownModal; 
+
+// Google দিয়ে লগইন করার ফাংশন
+async function signInWithGoogle() {
+    // এই ফাংশনটি কাজ করার জন্য আপনাকে অবশ্যই Firebase-এ Google Sign-in এনাবল করতে হবে
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        
+        // পপ-আপের মাধ্যমে লগইন শুরু করা
+        const result = await firebase.auth().signInWithPopup(provider);
+        
+        // ইউজার ইনফো এখানে পাওয়া যাবে: result.user
+        
+        alert('Google Login successful! Welcome ' + result.user.displayName);
+        closeModal();
+    } catch (error) {
+        // ত্রুটি হ্যান্ডেল করা
+        let errorMessage = 'Google Login failed.';
+        if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = 'Login popup was closed. Please try again.';
+        } else if (error.message) {
+            errorMessage = 'Error: ' + error.message;
+        }
+        alert(errorMessage);
+        console.error("Google Sign-In Error:", error);
+    }
+}
+
+// বিদ্যমান ফাংশন
+function addPasswordToggle(inputId, toggleId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleButton = document.getElementById(toggleId);
+
+    if (passwordInput && toggleButton) {
+        toggleButton.addEventListener('click', function() {
+            // ইনপুটের টাইপ পরিবর্তন করা
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // আইকনের ভিজ্যুয়াল পরিবর্তন করা
+            if (type === 'text') {
+                toggleButton.innerHTML = '🙈'; // চোখ খোলা (দেখা যাচ্ছে)
+            } else {
+                toggleButton.innerHTML = '👁️'; // চোখ বন্ধ (হাইড)
+            }
+        });
+    }
+}
+
+// বিদ্যমান ফাংশন
+function openAuthModal(tab='register'){
+  openModal(`
+    <div id="authFormContent"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn ghost" onclick="closeModal()">Close</button></div>
+  `);
+  showAuthTab(tab);
+}
+
+// আপডেট করা ফাংশন
+function showAuthTab(tab){
+  const c = document.getElementById('authFormContent');
+  if(tab==='register'){
+    c.innerHTML = `
+      <div class="auth-form-container">
+        <h3>Register</h3>
+        <p class="muted" style="text-align: center;">অ্যাকাউন্ট তৈরি করুন, নিজের ডোনেট করুন অন্যকে উৎসাহিত করুন</p>
+        <div class="input-group"><label>Name</label><input id="regName" type="text" placeholder="তোমার নাম" /></div>
+        <div class="input-group"><label>Email</label><input id="regEmail" type="email" placeholder="example@mail.com" /></div>
+        
+        <div class="input-group">
+            <label>Password</label>
+            <div class="password-input-wrapper">
+                <input id="regPass" type="password" placeholder="password" />
+                <button type="button" id="regToggle" class="toggle-password" aria-label="Toggle password visibility">👁️</button>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px"><input id="tncCheckbox" type="checkbox" style="width: auto;"/>
+        <label for="tncCheckbox" class="muted small">I agree to <a href="#" id="openTnC" class="link" style="color: var(--accent); text-decoration: none;">terms & conditions</a></label></div>
+        
+        <div class="btn-group">
+          <button class="btn primary" id="regBtn">Register</button>
+        </div>
+        
+        <div class="divider" style="text-align: center; margin: 15px 0; color: #aaa;">অথবা</div>
+        <div class="btn-group">
+             <button class="btn ghost" id="googleLoginBtn_reg" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <img src="https://img.icons8.com/color/22/000000/google-logo.png" alt="Google logo" style="width: 22px; height: 22px;"/>
+                Google দিয়ে লগইন করুন
+            </button>
+        </div>
+        
+        <div class="text-link" style="text-align: center; margin-top: 10px;">
+          <button class="btn ghost" style="width: 100%;" onclick="showAuthTab('login')">Have A Account? Login Now</button>
+        </div>
+      </div>`;
+    document.getElementById('openTnC').addEventListener('click', (e)=>{ e.preventDefault(); openModal(`<h3>Terms & Conditions</h3><div class="muted">📜 Terms & Conditions (T&C) – RESCUES App  
+<div>1. **Eligibility** - ব্যবহারকারীকে অবশ্যই ন্যূনতম 18 বছর বয়সী হতে হবে।  
+   - সঠিক স্বাস্থ্যগত অবস্থায় না থাকলে দান করা যাবে না।  </div>
+<div>2. **Accuracy of Information** - ব্যবহারকারী যে তথ্য প্রদান করবে (নাম, বয়স, রক্তের গ্রুপ, যোগাযোগের তথ্য ইত্যাদি) তা অবশ্যই সঠিক হতে হবে।  
+   - ভুল তথ্য প্রদান করলে অ্যাকাউন্ট সাসপেন্ড হতে পারে।  </div>
+<div>3. **Privacy & Data** - ব্যবহারকারীর ব্যক্তিগত তথ্য নিরাপদ রাখা হবে।  
+   - শুধুমাত্র রক্তদাতা ও গ্রহীতার সংযোগের জন্য তথ্য ব্যবহৃত হবে।  </div>
+<div>4. **Responsibility** - রক্ত দানের আগে দাতা তার শারীরিক অবস্থা নিশ্চিত করবেন।  
+   - রক্ত গ্রহীতা হাসপাতালের নিয়ম মেনে দাতার রক্ত পরীক্ষা করিয়ে নেবেন।  </div>
+<div>5. **Prohibited Activities** - ভুয়া প্রোফাইল তৈরি, ভুল তথ্য দেওয়া, অথবা আর্থিক লেনদেন সম্পূর্ণভাবে নিষিদ্ধ।  
+   - কোনো ধরনের প্রতারণা বা অপব্যবহার করলে আইনানুগ ব্যবস্থা নেওয়া হবে।  </div>
+<div>6. **Liability Disclaimer** - এই অ্যাপ কেবল দাতা ও গ্রহীতার মধ্যে যোগাযোগের মাধ্যম।  
+   - রক্ত সংক্রান্ত কোনো ঝুঁকির দায়ভার সম্পূর্ণভাবে দাতা ও গ্রহীতার।  </div>
+<div>7. **Modification of Terms** - প্রয়োজন অনুযায়ী শর্তাবলী পরিবর্তন করা হতে পারে।  
+   - ব্যবহারকারীরা নিয়মিতভাবে আপডেট চেক করবেন।  </div>
+<div>✅ "Agree" বাটনে ক্লিক করার মাধ্যমে আপনি উপরোক্ত সব শর্তাবলী মেনে নিচ্ছেন।</div><div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn ghost" onclick="closeModal()">Close</button></div>`); });
+    
+    // নতুন টগল ফাংশন কল করা
+    addPasswordToggle('regPass', 'regToggle'); 
+    
+    setTimeout(()=> {
+        document.getElementById('regBtn').onclick = async ()=> {
+          const name = document.getElementById('regName').value.trim();
+          const email = document.getElementById('regEmail').value.trim();
+          const pass = document.getElementById('regPass').value;
+          const tnc = document.getElementById('tncCheckbox').checked;
+          if(!name || !email || !pass){ alert('সব ফিল্ড পূরণ করুন'); return; }
+          if(!tnc){ alert('Terms & Conditions-এ সম্মতি প্রয়োজন'); return; }
+          try { await registerUser(name,email,pass); alert('Registration successful'); closeModal(); } catch(e){ alert('Error: ' + (e.message || e)); }
+        };
+        
+        // ✅ রেজিস্টার ফর্মে Google বাটন-এ লিসেনার যুক্ত করা
+        document.getElementById('googleLoginBtn_reg').onclick = signInWithGoogle;
+        
+    }, 50);
+  } else {
+    // লগইন ট্যাব
+    c.innerHTML = `
+      <div class="auth-form-container">
+        <h3>Login</h3>
+        <p class="muted" style="text-align: center;">আমরা জানতাম আপনি খুব শীগ্রই ফিরে আসবেন ,অ্যাকাউন্টে প্রবেশ করুন</p>
+        
+        <div class="btn-group" style="margin-bottom: 15px;">
+             <button class="btn ghost" id="googleLoginBtn_login" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <img src="https://img.icons8.com/color/22/000000/google-logo.png" alt="Google logo" style="width: 22px; height: 22px;"/>
+                Google দিয়ে লগইন করুন
+            </button>
+        </div>
+        
+        <div class="divider" style="text-align: center; margin: 15px 0 20px 0; color: #aaa;">অথবা ইমেল দিয়ে</div>
+        
+        <div class="input-group"><label>Email</label><input id="loginEmail" type="email" placeholder="example@mail.com" /></div>
+        
+        <div class="input-group">
+            <label>Password</label>
+            <div class="password-input-wrapper">
+                <input id="loginPass" type="password" placeholder="password" />
+                <button type="button" id="loginToggle" class="toggle-password" aria-label="Toggle password visibility">👁️</button>
+            </div>
+        </div>
+        
+        <div class="btn-group">
+          <button class="btn primary" id="loginBtn">Login</button>
+        </div>
+        
+        <div class="text-link" style="text-align: right; margin-top: 10px;">
+          <button class="btn link" id="forgotPassBtn" style="padding: 0; background: none; border: none; color: var(--accent); cursor: pointer;">Forgot Password?</button>
+        </div>
+        
+        <div class="text-link" style="text-align: center; margin-top: 10px;">
+          <button class="btn ghost" style="width: 100%;" onclick="showAuthTab('register')">New User? Registration Now</button>
+        </div>
+      </div>`;
+      
+    // নতুন টগল ফাংশন কল করা
+    addPasswordToggle('loginPass', 'loginToggle'); 
+    
+    setTimeout(()=> {
+        document.getElementById('loginBtn').onclick = async ()=> {
+          const email = document.getElementById('loginEmail').value.trim();
+          const pass = document.getElementById('loginPass').value;
+          if(!email || !pass){ alert('সব ফিল্ড পূরণ করুন'); return; }
+          try{ await loginUser(email,pass); alert('Login successful'); closeModal(); } catch(e){ alert('Error: ' + (e.message || e)); }
+        };
+        
+        // ✅ Login ফর্মে Google বাটন-এ লিসেনার যুক্ত করা
+        document.getElementById('googleLoginBtn_login').onclick = signInWithGoogle; 
+        
+        // ✅ বিদ্যমান লজিক: Forgot Password বাটনে লিসেনার যুক্ত করা
+        document.getElementById('forgotPassBtn').onclick = () => {
+            showPasswordResetDialog();
+        };
+        
+    }, 50);
+  }
+}
+
+// বিদ্যমান ফাংশন
+function showPasswordResetDialog() {
+    // ডায়ালগ বক্সে ব্যবহারকারীর ইমেল ইনপুট নেওয়ার জন্য UI
+    const dialogContent = `
+        <div style="padding: 20px;">
+            <h3>Forgot Password</h3>
+            <p class="muted">আপনার নিবন্ধিত ইমেল ঠিকানা দিন। আমরা পাসওয়ার্ড রিসেট করার জন্য একটি লিংক পাঠাব।</p>
+            <div class="input-group" style="margin-top: 20px;">
+                <label>Email</label>
+                <input id="resetEmailInput" type="email" placeholder="example@mail.com" style="width: 100%; padding: 10px; box-sizing: border-box;" />
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+                <button class="btn ghost" onclick="closeModal()">Cancel</button>
+                <button class="btn primary" id="sendResetLinkBtn">Send Reset Link</button>
+            </div>
+        </div>
+    `;
+
+    openModal(dialogContent);
+
+    // রিসেট লিংক পাঠানোর জন্য ইভেন্ট লিসেনার
+    document.getElementById('sendResetLinkBtn').onclick = async () => {
+        const email = document.getElementById('resetEmailInput').value.trim();
+        if (!email) {
+            alert('অনুগ্রহ করে আপনার ইমেল ঠিকানা লিখুন।');
+            return;
+        }
+
+        try {
+            // ✅ Compat ভার্সনের জন্য সঠিক কল
+            await firebase.auth().sendPasswordResetEmail(email); 
+            
+            closeModal();
+            alert('পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে! অনুগ্রহ করে আপনার ইনবক্স এর spam section চেক করুন।');
+        } catch (e) {
+            let errorMessage = 'পাসওয়ার্ড রিসেট ইমেল পাঠাতে সমস্যা হয়েছে।';
+            if (e.code === 'auth/user-not-found') {
+                errorMessage = 'এই ইমেল ঠিকানার কোনো ব্যবহারকারী খুঁজে পাওয়া যায়নি।';
+            } else if (e.message) {
+                 errorMessage = 'Error: ' + e.message;
+            }
+            alert(errorMessage);
+            console.error(e);
+        }
+    };
+}
+
+function openAppRatingModal() {
+  if (!currentUser) return;
+  const userRatingsRef = firebase.database().ref(`appRatings/${currentUser.uid}`);
+  const userRef = firebase.database().ref(`users/${currentUser.uid}`);
+  appRatingsRef.child(currentUser.uid).once('value').then(snapshot => {
+    if (snapshot.exists()) {
+      return;
+    }
+    const html = `
+      <div class="auth-form-container" style="text-align: center;">
+        <h3>অ্যাপটি কেমন লাগছে?</h3>
+        <p class="muted">অনুগ্রহ করে একটি রেটিং ও আপনার মতামত দিন। এটি আমাদের অ্যাপকে আরও উন্নত করতে সাহায্য করবে।</p>
+        
+        <div id="starRatingContainer" class="ratings" style="font-size: 36px; margin: 20px 0; cursor: pointer; display: flex; justify-content: space-around;">
+          <span data-rating="1" title="Very Bad">★</span>
+          <span data-rating="2" title="Bad">★</span>
+          <span data-rating="3" title="Okay">★</span>
+          <span data-rating="4" title="Good">★</span>
+          <span data-rating="5" title="Very Good">★</span>
+        </div>
+        <div class="input-group" style="margin-top: 10px;">
+          <textarea id="ratingComment" rows="3" placeholder="এখানে আপনার মূল্যবান মন্তব্য লিখুন (ঐচ্ছিক)" style="width:100%;border-radius:8px;padding:8px;border:1px solid var(--glass-border);background:var(--bg);color:var(--text-color);"></textarea>
+        </div>
+
+        <div class="btn-group" style="justify-content:center;">
+          <button class="btn primary" id="submitAppRatingBtn" disabled>রেটিং দিন</button>
+        </div>
+        <div class="text-link" style="margin-top: 10px;">
+          <button class="btn ghost small" onclick="dismissRatingModal()">এখন নয়</button>
+        </div>
+      </div>
+    `;
+    openModal(html);
+    
+    // Apply theme-specific styles to the textarea
+    const ratingCommentTextarea = document.getElementById('ratingComment');
+    if (currentTheme === 'light') {
+        ratingCommentTextarea.style.background = '#f8fafc';
+        ratingCommentTextarea.style.border = '1px solid rgba(0,0,0,0.15)';
+    } else {
+        ratingCommentTextarea.style.background = 'var(--bg)';
+        ratingCommentTextarea.style.border = '1px solid var(--glass-border)';
+    }
+
+    const starContainer = document.getElementById('starRatingContainer');
+    const submitBtn = document.getElementById('submitAppRatingBtn');
+    const ratingComment = document.getElementById('ratingComment');
+    let selectedRating = 0;
+
+    starContainer.addEventListener('click', (e) => {
+      if (e.target.tagName === 'SPAN') {
+        selectedRating = parseInt(e.target.dataset.rating);
+        document.querySelectorAll('#starRatingContainer span').forEach(span => {
+          const starRating = parseInt(span.dataset.rating);
+          span.style.color = starRating <= selectedRating ? '#f5b041' : 'var(--muted)';
+        });
+        submitBtn.disabled = false;
+      }
+    });
+
+    submitBtn.onclick = () => {
+      if (selectedRating === 0) {
+        alert("রেটিং দিন!");
+        return;
+      }
+      appRatingsRef.child(currentUser.uid).set({ 
+        rating: selectedRating, 
+        comment: ratingComment.value.trim(),
+        timestamp: Date.now() 
+      })
+      .then(() => {
+        userRef.update({ appRated: true });
+        alert('আপনার রেটিং এবং মূল্যবান মতামতের জন্য ধন্যবাদ!');
+        closeModal();
+      })
+      .catch(error => {
+        alert('রেটিং সংরক্ষণ করতে সমস্যা হয়েছে।');
+        console.error("Error saving app rating:", error);
+        closeModal();
+      });
+    };
+  });
+}
+window.dismissRatingModal = () => {
+  const userRef = firebase.database().ref(`users/${currentUser.uid}`);
+  const nextShowTime = Date.now() + 7 * 24 * 60 * 60 * 1000; // ৭ দিন পর
+  userRef.update({ showRatingAfter: nextShowTime });
+  closeModal();
+};
+
+function openCalendarModal(initialDate) {
+    customCalendarModal.classList.add('visible');
+    currentCalendarDate = initialDate ? new Date(initialDate) : new Date();
+    renderCalendar();
+}
+
+function closeCalendarModal() {
+    customCalendarModal.classList.remove('visible');
+}
+
+function renderCalendar() {
+    calendarGrid.innerHTML = '';
+    const today = new Date();
+    const month = currentCalendarDate.getMonth();
+    const year = currentCalendarDate.getFullYear();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+    calendarMonthYear.textContent = new Date(year, month).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    calendarMonthYear.prepend("Rescues Calendar - ");
+
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    daysOfWeek.forEach(day => {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day';
+        dayEl.textContent = day;
+        calendarGrid.appendChild(dayEl);
+    });
+
+    for (let i = 0; i < firstDay; i++) {
+        calendarGrid.appendChild(document.createElement('div'));
+    }
+
+    for (let i = 1; i <= daysInMonth; i++) {
+        const dateEl = document.createElement('div');
+        dateEl.className = 'calendar-date';
+        dateEl.textContent = i;
+        const date = new Date(year, month, i);
+
+        if (date.toDateString() === today.toDateString()) {
+            dateEl.classList.add('current');
+        }
+
+        if (activeDateInput && activeDateInput.value) {
+            const selectedDate = new Date(activeDateInput.value);
+            // Fix: Compare dates based on YYYY-MM-DD string to avoid time zone issues on date selection
+            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const selectedDateString = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+            
+            if (dateString === selectedDateString) {
+                dateEl.classList.add('selected');
+            }
+        }
+        
+        dateEl.addEventListener('click', () => {
+            if (activeDateInput) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                
+                const selectedDateISO = new Date(y, m - 1, d).toISOString();
+                
+                activeDateInput.value = `${y}-${m}-${d}`;
+                document.getElementById('donLastDisplay').value = `${y}-${m}-${d}`;
+                closeCalendarModal();
+            }
+        });
+
+        calendarGrid.appendChild(dateEl);
+    }
+}
+prevMonthBtn.addEventListener('click', () => {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+    renderCalendar();
+});
+nextMonthBtn.addEventListener('click', () => {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+    renderCalendar();
+});
+clearDateBtn.addEventListener('click', () => {
+    if(activeDateInput) {
+        activeDateInput.value = '';
+        const donLastDisplay = document.getElementById('donLastDisplay');
+        if (donLastDisplay) donLastDisplay.value = '';
+        closeCalendarModal();
+    }
+});
+
+function openAddDonorForm(prefill){
+  const d = prefill || {name:'',phone:'',blood:'A+',location:'',lastDonateDate:'',willing:false};
+  openModal(`
+    <div class="auth-form-container">
+      <h3>${prefill ? 'Edit Donor' : 'Add Donor'}</h3>
+      <p>রক্তদান একটি মহৎ কাজ, আপনার তথ্য দিয়ে অন্যদের সাহায্য করুন।</p>
+      
+      <div class="input-group">
+        <label for="donName">Name</label>
+        <input id="donName" type="text" value="${escapeHtml(d.name||'')}" placeholder="তোমার নাম"/>
+      </div>
+      
+      <div class="input-group">
+        <label for="donPhone">Phone</label>
+        <input id="donPhone" type="tel" value="${escapeHtml(d.phone||'')}" placeholder="ফোন নম্বর"/>
+      </div>
+      
+      <div class="input-group">
+        <label for="donBlood">Blood Group</label>
+        <select id="donBlood">
+          <option value="A+" ${d.blood==='A+'?'selected':''}>A+</option>
+          <option value="A-" ${d.blood==='A-'?'selected':''}>A-</option>
+          <option value="B+" ${d.blood==='B+'?'selected':''}>B+</option>
+          <option value="B-" ${d.blood==='B-'?'selected':''}>B-</option>
+          <option value="O+" ${d.blood==='O+'?'selected':''}>O+</option>
+          <option value="O-" ${d.blood==='O-'?'selected':''}>O-</option>
+          <option value="AB+" ${d.blood==='AB+'?'selected':''}>AB+</option>
+          <option value="AB-" ${d.blood==='AB-'?'selected':''}>AB-</option>
+        </select>
+      </div>
+      
+      <div class="input-group">
+        <label for="donLocation">Location</label>
+        <input id="donLocation" type="text" value="${escapeHtml(d.location||'')}" placeholder="আপনার ঠিকানা"/>
+      </div>
+      
+      <div class="input-group">
+          <label for="donLast">Last Donate Date</label>
+          <input type="text" id="donLastDisplay" placeholder="তারিখ সিলেক্ট করুন" readonly style="cursor: pointer;"/>
+          <input type="hidden" id="donLastInput" value="${d.lastDonateDate ? formatInputDate(d.lastDonateDate) : ''}" />
+      </div>
+
+      <div class="input-group" style="display:flex;align-items:center;gap:8px;">
+        <input id="donWilling" type="checkbox" ${d.willing ? 'checked' : ''} style="width:auto;"/>
+        <label for="donWilling" class="muted small">Willing to donate</label>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn primary" id="saveDonorBtn">${prefill ? 'Update' : 'Add'}</button>
+      </div>
+    </div>
+  `);
+  
+  const donLastDisplay = document.getElementById('donLastDisplay');
+  const donLastInput = document.getElementById('donLastInput');
+  donLastDisplay.value = donLastInput.value;
+  
+  // Apply theme-specific styles to the inputs in the modal dynamically
+  const modalInputs = document.querySelectorAll('.auth-form-container input, .auth-form-container select, .auth-form-container textarea');
+  modalInputs.forEach(input => {
+      if (currentTheme === 'light') {
+          input.style.background = '#f8fafc';
+          input.style.border = '1px solid rgba(0,0,0,0.15)';
+          input.style.color = 'var(--text-color)'; 
+      } else {
+          input.style.background = 'var(--bg)';
+          input.style.border = '1px solid var(--glass-border)';
+          input.style.color = 'var(--text-color)';
+      }
+  });
+
+
+  donLastDisplay.addEventListener('click', () => {
+      activeDateInput = donLastInput;
+      const initialDate = donLastInput.value ? new Date(donLastInput.value) : new Date();
+      openCalendarModal(initialDate);
+  });
+
+  setTimeout(()=> {
+    document.getElementById('saveDonorBtn').onclick = async ()=> {
+      const payload = {
+        name: document.getElementById('donName').value.trim(),
+        phone: document.getElementById('donPhone').value.trim(),
+        blood: document.getElementById('donBlood').value,
+        location: document.getElementById('donLocation').value.trim(),
+        // Save as ISO string for Firebase/storage consistency
+        lastDonateDate: donLastInput.value ? new Date(donLastInput.value).toISOString() : null,
+        willing: document.getElementById('donWilling').checked
+      };
+      if(!payload.name || !payload.phone){ 
+        alert('Name ও Phone বাধ্যতামূলক'); 
+        return; 
+      }
+      try{
+        if(prefill && prefill.id){
+          await updateDonor(prefill.id, payload);
+          alert('ডোনারের তথ্য সফলভাবে আপডেট হয়েছে!');
+        } else {
+          await addDonor(payload);
+          closeModal();
+          openModal(`
+            <h3>শুভেচ্ছা!</h3>
+            <p class="muted" style="text-align: center;font-size:16px;">একজন নতুন রক্তযোদ্ধাকে পেয়ে আমরা আনন্দিত। আপনার এই মহৎ উদ্যোগের জন্য আপনাকে ধন্যবাদ!</p>
+            <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+              <button class="btn primary" onclick="closeModal()">Done</button>
+            </div>
+          `);
+        }
+      } catch(e){ 
+        alert('তথ্য সংরক্ষণে সমস্যা হয়েছে: ' + (e.message || e)); 
+      }
+    };
+  }, 50);
+}
+function openEditDonor(id){
+  const d = donors[id];
+  if(!d){ alert('ডেটা মেলেনি'); return; }
+  if(!currentUser || d.owner !== currentUser.uid){ alert('তুমি এই কার্ড এডিট করতে পারবে না'); return; }
+  openAddDonorForm(d);
+}
+function openEditProfile(){
+  if(!currentUser) return openAuthModal('login');
+  openModal(`<h3>Edit Profile</h3><div style="margin-top:8px"><div class="auth-form-container"><label class="muted small">Name</label><input id="editName" value="${escapeHtml(currentUser.displayName||'')}" /><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" id="saveProfileBtn">Save</button></div></div></div>`);
+  setTimeout(()=> {
+    // Apply theme-specific styles to the input
+    const editNameInput = document.getElementById('editName');
+    if (currentTheme === 'light') {
+        editNameInput.style.background = '#f8fafc';
+        editNameInput.style.border = '1px solid rgba(0,0,0,0.15)';
+    } else {
+        editNameInput.style.background = 'var(--bg)';
+        editNameInput.style.border = '1px solid var(--glass-border)';
+    }
+    
+    document.getElementById('saveProfileBtn').onclick = async ()=> {
+      const name = document.getElementById('editName').value.trim();
+      if(!name){ alert('Name লিখুন'); return; }
+      await firebase.auth().currentUser.updateProfile({ displayName: name });
+      await firebase.database().ref('users/' + firebase.auth().currentUser.uid).update({ name });
+      closeModal();
+      alert('Profile updated');
+    };
+  }, 50);
+}
+aboutBtn.addEventListener('click', ()=> { 
+  closeMenuFunc(); 
+  openModal(`
+    <h3>About RESCUES</h3>
+    <div class="muted">
+      RESCUES  অ্যাপটি তৈরি করা হয়েছে রক্তদাতা ও রক্ত প্রয়োজনদের মধ্যে একটি সহজ ও দ্রুত সংযোগ স্থাপনের জন্য। 
+      এখানে আপনি রক্তদাতাদের তালিকা দেখতে, রেটিং দিতে, কমেন্ট করতে এবং নতুন ডোনার রেজিস্টার করতে পারবেন। 
+      এটি বিশেষভাবে মোবাইল ফ্রেন্ডলি এবং ইউজার-ফ্রেন্ডলি ডিজাইন করা হয়েছে। 
+      উদ্দেশ্য হলো সময়মতো রক্তের প্রয়োজনীয়তা মেটানো এবং রক্তদাতাদের সাথে সহজ যোগাযোগ নিশ্চিত করা।
+      <h2> <a> RESCUES Team </a> কোনো প্রকার আর্থিক লেনদেন সাপোর্ট করে না, সুতরাং অর্থ লেনদেন এড়িয়ে চলুন </h2>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px">
+      <button class="btn ghost" onclick="closeModal()">Close</button>
+    </div>
+  `); 
+});
+guidelinesBtn.addEventListener('click', ()=> { 
+  closeMenuFunc(); 
+  openModal(`
+    <h3>Guidelines</h3>
+    <div class="muted">
+      ১. ডোনারের সাথে সব সময় বিনীত ও সম্মানজনকভাবে কথা বলুন।<br>
+      ২. নির্ধারিত সময়ে পৌঁছান এবং সময়মতো দান সম্পন্ন করুন।<br>
+      ৩. নিজের স্বাস্থ্য বিবেচনা করুন; যদি অসুস্থ বোধ করেন, রক্ত দান করবেন না।<br>
+      ৪. রক্তদাতার তথ্য গোপন রাখুন এবং শুধুমাত্র প্রয়োজনীয় ব্যবহার করুন।<br>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px">
+      <button class="btn ghost" onclick="closeModal()">Close</button>
+    </div>
+  `); 
+});
+// নতুন আইটেমটি নির্বাচন করা
+const healthCornerBtn = document.getElementById('healthCornerBtn');
+
+// 'হেলথ কর্নার' বাটনে ক্লিক ইভেন্ট লিসেনার যোগ করা
+if (healthCornerBtn) {
+  healthCornerBtn.addEventListener('click', ()=> { 
+    // মেনু বন্ধ করার জন্য আপনার ফাংশন কল করা
+    closeMenuFunc(); 
+
+    // মোডাল (Modal) এর মধ্যে 'হেলথ কর্নার' কন্টেন্ট লোড করা
+    openModal(`
+      <h3>Health Corner: স্বাস্থ্য বার্তা</h3>
+      <div class="muted" style="text-align: left;">
+        <h4>১. রক্তদানের যোগ্যতা</h4>
+        <ul>
+          <li>বয়স: ১৮ থেকে ৬৫ বছর।</li>
+          <li>ওজন: সর্বনিম্ন ৪৫-৫০ কেজি।</li>
+          <li>স্বাস্থ্য: সম্পূর্ণ সুস্থ থাকতে হবে এবং গত ২৪ ঘন্টার মধ্যে জ্বর বা সর্দি-কাশি থাকা যাবে না।</li>
+          <li>সময়কাল: শেষ রক্তদানের পর কমপক্ষে ৩ মাস (১২ সপ্তাহ) অতিবাহিত হতে হবে।</li>
+        </ul>
+        
+        <h4>২. ভুল ধারণা দূর করুন</h4>
+        <div style="margin-left: 10px;">
+          <p>❌ **মিথ:** রক্ত দিলে শরীর দুর্বল হয় বা ওজন বাড়ে।</p>
+          <p>✅ **বাস্তবতা:** রক্তদানের কিছুক্ষণের মধ্যেই শরীর রক্তের ঘাটতি পূরণ করতে শুরু করে। এটি নতুন রক্তকণিকা উৎপাদনে উৎসাহিত করে, যা শরীরের জন্য উপকারী।</p>
+        </div>
+        
+        <h4>৩. রক্তদানের আগে ও পরে টিপস</h4>
+        <ul>
+          <li>**আগে:** পর্যাপ্ত জল পান করুন এবং হালকা খাবার খান।</li>
+          <li>**পরে:** পর্যাপ্ত পরিমাণে তরল পানীয় (যেমন: জল, ফলের রস) গ্রহণ করুন এবং বিশ্রাম নিন।</li>
+        </ul>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px">
+        <button class="btn ghost" onclick="closeModal()">Close</button>
+      </div>
+    `); 
+  });
+}
+logoutBtn.addEventListener('click', ()=> {
+  closeMenuFunc();
+  logoutReasonInput.value = ""; // Clear previous reason
+  logoutReasonModal.style.display = 'flex';
+});
+if(searchInput){
+  searchInput.addEventListener('input', ()=> {
+    renderSearchGrid();
+    if(searchInput.value.length > 0) {
+        clearSearch.classList.add('visible');
+    } else {
+        clearSearch.classList.remove('visible');
+    }
+  });
+  clearSearch.addEventListener('click', ()=> { 
+    searchInput.value=''; 
+    renderSearchGrid(); 
+    clearSearch.classList.remove('visible');
+  });
+}
+setInterval(()=> { renderDonorsGrid(); renderSearchGrid(); renderMyDonors(); renderEmergencyPosts(); }, 60*1000);
+window.openAuthModal = openAuthModal;
+window.openEditDonor = openEditDonor;
+window.openEditProfile = openEditProfile;
+window.deleteDonor = deleteDonor;
+window.openRatingModal = openRatingModal;
+window.openDonorDetailsModal = openDonorDetailsModal;
+window.openEmergencyPostModal = openEmergencyPostModal;
+window.deleteEmergencyPost = deleteEmergencyPost;
+window.setActivePage = setActivePage;
+function scrollToTop() {
+    document.querySelector('main').scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+window.scrollToTop = scrollToTop;
+
+function refreshDonors() {
+    loadAndRenderDonors();
+}
+window.refreshDonors = refreshDonors;
+
+function loadAndRenderDonors() {
+    donorsGrid.innerHTML = '';
+    
+    if (!currentUser) {
+        donorsLoginPrompt.style.display = 'block';
+        donorsRefreshPrompt.style.display = 'none';
+        noData.style.display = 'none';
+        return;
+    } else {
+        donorsLoginPrompt.style.display = 'none';
+        noData.style.display = 'block';
+        noData.textContent = "Data Is Updating";
+    }
+
+    donorsRef.off();
+
+    donorsRef.once('value').then(snapshot => {
+        donors = snapshot.val() || {};
+        const latestEmergencyPost = Object.values(allEmergencyPosts).sort((a,b)=>b.timestamp - a.timestamp)[0];
+        
+        donorsGrid.innerHTML = '';
+        const arr = Object.values(donors || {}).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        
+if (latestEmergencyPost) {
+  const postEl = document.createElement("div");
+  postEl.className = "emergency-card";
+  postEl.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <h3 style="margin: 0; color: white;">🚨 জরুরি রক্তের প্রয়োজন!</h3>
+      <div class="blood-group-large">${escapeHtml(latestEmergencyPost.blood || "")}</div>
+    </div>
+    <p style="margin: 0; font-size: 16px;">
+      <span style="font-weight: 600;">রোগী:</span> ${escapeHtml(latestEmergencyPost.patientName || latestEmergencyPost.patientname || "")}<br>
+      <span style="font-weight: 600;">ঠিকানা:</span> ${escapeHtml(latestEmergencyPost.patientAddress || latestEmergencyPost.patientaddress || latestEmergencyPost.location || 'দেওয়া হয়নি')}<br>
+      <span style="font-weight: 600;">বিস্তারিত:</span> ${escapeHtml(latestEmergencyPost.details || "")}
+    </p>
+    <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+      <a href="tel:${encodeURIComponent(latestEmergencyPost.phone || "")}" class="btn ghost" style="color: white; border-color: rgba(255,255,255,0.4);">যোগাযোগ করুন</a>
+      <div style="font-size: 12px; opacity: 0.7;">পোস্ট করেছেন: ${users[latestEmergencyPost.user] ? users[latestEmergencyPost.user].name : "Unknown User"}</div>
+    </div>
+  `;
+  donorsGrid.appendChild(postEl);
+}
+
+        if (arr.length === 0) {
+            if (currentUser) {
+                donorsRefreshPrompt.style.display = 'block';
+                noData.textContent = translations[currentLang].noSearchResult;
+            }
+            noData.style.display = 'block';
+        } else {
+            noData.style.display = 'none';
+            donorsRefreshPrompt.style.display = 'none';
+            arr.forEach(d => donorsGrid.appendChild(renderCard(d)));
+        }
+    }).catch(error => {
+        console.error("Error fetching donors: ", error);
+        noData.textContent = "ডেটা লোড করতে সমস্যা হয়েছে।";
+        noData.style.display = 'block';
+        donorsRefreshPrompt.style.display = 'block';
+    });
+
+    donorsRef.on('value', snapshot => {
+        donors = snapshot.val() || {};
+        renderAll();
+    });
+}
+
+const logoutReasonModalElement = document.getElementById("logoutReasonModal");
+const logoutReasonInputElement = document.getElementById("logoutReasonInput");
+const logoutReasonSubmitButton = document.getElementById("logoutReasonSubmit");
+
+if(logoutReasonSubmitButton) {
+  // Logout reason is now OPTIONAL
+  logoutReasonSubmitButton.addEventListener("click", () => {
+    let reason = logoutReasonInputElement.value.trim();
+    
+    if (reason !== "") {
+        console.log("User logout reason (optional):", reason);
+        // You can send this reason to a log/analytics service here
+    }
+
+    firebase.auth().signOut().then(() => {
+      alert("আপনি লগআউট হয়েছেন!");
+      logoutReasonModalElement.style.display = "none";
+      logoutReasonInputElement.value = ""; 
+    }).catch((error) => {
+      console.error("Logout Error:", error);
+      alert("লগআউটে সমস্যা হয়েছে: " + error.message);
+    });
+  });
+}
+
+// Event listener for the big PLUS button on the Add page
+addPlus.addEventListener('click', () => {
+    addPlus.classList.add('spin-animation');
+    setTimeout(() => {
+        addPlus.classList.remove('spin-animation');
+    }, 600);
+
+    if (currentUser) {
+        openAddDonorForm();
+    } else {
+        openAuthModal('login');
+    }
+});
+// ... (The entire existing script content up to the `loadAndRenderDonors` function)
+
+// NEW: Normalization function for Bangla to English phonetic search
+function normalizeBanglaToEnglish(text) {
+    if (typeof text !== 'string') return '';
+    text = text.toLowerCase().trim();
+    
+    // Simple, common, and effective phonetic substitutions for Bengali
+    // This is not a perfect transliterator but covers common search use cases.
+    const map = {
+        'অ': 'o', 'আ': 'a', 'ই': 'i', 'ঈ': 'i', 'উ': 'u', 'ঊ': 'u', 'ঋ': 'ri',
+        'এ': 'e', 'ঐ': 'oi', 'ও': 'o', 'ঔ': 'ou',
+        
+        'ক': 'k', 'খ': 'kh', 'গ': 'g', 'ঘ': 'gh', 'ঙ': 'ng',
+        'চ': 'c', 'ছ': 'ch', 'জ': 'j', 'ঝ': 'jh', 'ঞ': 'n',
+        'ট': 't', 'ঠ': 'th', 'ড': 'd', 'ঢ': 'dh', 'ণ': 'n',
+        'ত': 't', 'থ': 'th', 'দ': 'd', 'ধ': 'dh', 'ন': 'n',
+        'প': 'p', 'ফ': 'f', 'ব': 'b', 'ভ': 'bh', 'ম': 'm',
+        'য': 'j', 'র': 'r', 'ল': 'l', 'শ': 'sh', 'ষ': 'sh', 'স': 's', 'হ': 'h',
+        'ড়': 'r', 'ঢ়': 'rh', 'য়': 'y',
+        'ৎ': 't', 'ং': 'ng', 'ঃ': 'h', 'ঁ': 'n',
+        
+        // Vowel signs (kar) - handled by the following logic, but included for completeness
+        // 'া': 'a', 'ি': 'i', 'ী': 'i', 'ু': 'u', 'ূ': 'u', 'ৃ': 'ri',
+        // 'ে': 'e', 'ৈ': 'oi', 'ো': 'o', 'ৌ': 'ou',
+        
+        // Numbers
+        '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4',
+        '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9',
+    };
+
+    let normalizedText = '';
+    
+    // First pass: replace characters from the map
+    for (const char of text) {
+        normalizedText += map[char] || char;
+    }
+    
+    // Second pass: handle vowel signs (kar) and common conjuncts/nuances
+    normalizedText = normalizedText
+        .replace(/[া]/g, 'a') // a-kar
+        .replace(/[িী]/g, 'i') // i/ee-kar
+        .replace(/[ুূ]/g, 'u') // u/oo-kar
+        .replace(/[ে]/g, 'e') // e-kar
+        .replace(/[ৈ]/g, 'oi') // oi-kar
+        .replace(/[ো]/g, 'o') // o-kar
+        .replace(/[ৌ]/g, 'ou') // ou-kar
+        .replace(/[ৃ]/g, 'ri') // ri-kar
+        .replace(/kkh/g, 'kh') // kshya (ক্ষ) approximation
+        .replace(/r\b/g, 'ro'); // Final r/or
+        
+    // Remove all non-alphanumeric characters (including space) for consistent comparison
+    normalizedText = normalizedText.replace(/[^a-z0-9]/g, '');
+    
+    return normalizedText;
+}
+
+function renderSearchGrid(){
+  const rawQ = (searchInput && searchInput.value || '').trim().toLowerCase();
+  
+  // Normalize the user's search query
+  const normalizedQ = normalizeBanglaToEnglish(rawQ); 
+  
+  searchGrid.querySelector('.grid').innerHTML = ''; // Clear the grid for search results
+  
+  // Only proceed if user is logged in
+  if (!currentUser) {
+      return; 
+  }
+  
+  const arr = Object.values(donors || {}).sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  
+  const filtered = arr.filter(d=>{
+    // If no query, show all
+    if(!rawQ) return true; 
+
+    // 1. Check for a direct match (English or Bengali)
+    const directMatch = (d.name||'').toLowerCase().includes(rawQ) || 
+                        (d.location||'').toLowerCase().includes(rawQ) || 
+                        (d.blood||'').toLowerCase().includes(rawQ) || 
+                        (d.phone||'').toLowerCase().includes(rawQ);
+
+    if (directMatch) return true;
+
+    // 2. Check for a normalized (phonetic) match (English search for Bengali text)
+    if (normalizedQ.length > 0) {
+        const normalizedName = normalizeBanglaToEnglish(d.name);
+        const normalizedLocation = normalizeBanglaToEnglish(d.location);
+        
+        return normalizedName.includes(normalizedQ) || normalizedLocation.includes(normalizedQ);
+    }
+    
+    return false;
+  });
+  
+  if(filtered.length===0) noSearch.style.display='block'; else noSearch.style.display='none';
+  filtered.forEach(d => searchGrid.querySelector('.grid').appendChild(renderCard(d)));
+}
+// ... (Rest of the script continues)
+
+// আপনার বিদ্যমান JavaScript কোডের সাথে এই অংশটি যোগ করুন।
+
+
+// অ্যাপ ইনিশিয়ালাইজেশন
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const database = firebase.database();
+const postsRef = database.ref('product_posts'); // Admin App-এর ব্যবহৃত একই পাথ
+
+// --- প্রোডাক্ট কার্ড তৈরির ফাংশন ---
+function createProductCard(post) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <div class="product-image-container">
+            <img src="${post.image}" alt="${post.text ? post.text.substring(0, 30) : 'Post image'}" class="product-image" onerror="this.onerror=null;this.src='https://via.placeholder.com/300?text=No+Image'">
+        </div>
+        <div class="product-text-box">
+            <p class="product-description">${post.text ? post.text.substring(0, 100) : 'No description'}</p> 
+            <a href="${post.fbLink}" target="_blank" class="buy-now-btn">Buy Now</a>
+        </div>
+    `;
+    return card;
+}
+
+// --- প্রোডাক্ট পোস্ট লোড ও রেন্ডার করার প্রধান ফাংশন ---
+function loadAndRenderProductPosts() {
+    const grid = document.getElementById('productCardGrid');
+    const noData = document.getElementById('noProductPosts');
+    
+    if (!grid || !noData) {
+        return; 
+    }
+
+    grid.innerHTML = '<div class="muted">পোস্ট লোড হচ্ছে...</div>';
+    noData.style.display = 'none';
+
+    // Firebase থেকে রিয়েলটাইম ডেটা লোড করা
+    postsRef.on('value', (snapshot) => {
+        grid.innerHTML = ''; // আগের ডেটা পরিষ্কার করা
+        const posts = snapshot.val();
+        
+        if (posts) {
+            // পোস্টগুলিকে নতুন থেকে পুরোনো অনুযায়ী সাজানো
+            const postArray = Object.keys(posts).map(key => ({
+                id: key,
+                ...posts[key]
+            })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); 
+
+            if (postArray.length > 0) {
+                postArray.forEach(post => {
+                    grid.appendChild(createProductCard(post));
+                });
+                noData.style.display = 'none';
+            } else {
+                noData.style.display = 'block';
+            }
+        } else {
+            noData.style.display = 'block';
+        }
+        
+    }, (error) => {
+        console.error("Error fetching product posts:", error);
+        grid.innerHTML = '<div class="muted error" style="color:var(--danger)">পোস্ট লোড করার সময় সমস্যা হয়েছে।</div>';
+    });
+}
+
+// =================================================================
+// 🚨 সমাধান: ডকুমেন্ট লোড হওয়ার সাথে সাথে ফাংশনটি কল করা হচ্ছে। 
+// =================================================================
+document.addEventListener('DOMContentLoaded', loadAndRenderProductPosts);
+
+/* =======================================================
+  ১. 'প্রশ্নাবলী দেখুন' বাটনে ক্লিক করার ফাংশন
+========================================================== */
+function showFaqQuestions() {
+    const initialScreen = document.getElementById('faq-initial-screen');
+    const questionList = document.getElementById('faq-list');
+
+    // প্রাথমিক স্ক্রিনটি লুকানো এবং প্রশ্নগুলোর তালিকা দেখানো
+    if (initialScreen && questionList) {
+        initialScreen.style.display = 'none'; // বাটন স্ক্রিন লুকানো
+        questionList.style.display = 'block'; // প্রশ্ন তালিকা দেখানো
+    }
+}
+
+
+/* =======================================================
+  ২. উত্তর দেখুন / লুকান ফাংশন (Accordion Effect সহ)
+========================================================== */
+function toggleDetails(button) {
+    const parent = button.closest('.menu-item-with-details');
+    if (!parent) return;
+
+    const details = parent.querySelector('.item-details');
+    const isOpening = !details.style.maxHeight || details.style.maxHeight === '0px';
+
+    // ১. অন্যান্য সমস্ত খোলা উত্তর বন্ধ করা (Accordion Effect)
+    document.querySelectorAll('.menu-item-with-details.open').forEach(openParent => {
+        if (openParent !== parent) {
+            openParent.classList.remove('open');
+            openParent.querySelector('.item-details').style.maxHeight = null;
+            openParent.querySelector('.answer-toggle-btn').textContent = 'উত্তর দেখুন';
+        }
+    });
+
+    // ২. বর্তমান উত্তরটি খোলা বা বন্ধ করা
+    if (isOpening) {
+        // উত্তর খোলা
+        details.style.maxHeight = details.scrollHeight + "px";
+        parent.classList.add('open');
+        button.textContent = 'উত্তর লুকান';
+    } else {
+        // উত্তর বন্ধ
+        details.style.maxHeight = null;
+        parent.classList.remove('open');
+        button.textContent = 'উত্তর দেখুন';
+    }
+}
+
+
+/* =======================================================
+  ৩. FAQ স্টেট রিসেট করার ফাংশন
+========================================================== */
+function resetFaqState() {
+    // ১. সমস্ত খোলা উত্তর বন্ধ করে দেওয়া
+    document.querySelectorAll('.menu-item-with-details.open').forEach(parent => {
+        parent.classList.remove('open');
+        parent.querySelector('.item-details').style.maxHeight = null;
+        const button = parent.querySelector('.answer-toggle-btn');
+        if (button) {
+            button.textContent = 'উত্তর দেখুন';
+        }
+    });
+
+    // ২. স্ক্রিনকে প্রাথমিক অবস্থায় ফিরিয়ে আনা
+    const initialScreen = document.getElementById('faq-initial-screen');
+    const questionList = document.getElementById('faq-list');
+
+    if (initialScreen && questionList) {
+        initialScreen.style.display = 'block'; 
+        questionList.style.display = 'none'; 
+    }
+}
+
+
+/* =======================================================
+  ৪. মোডাল বন্ধ ও রিসেট করার ফাংশন (অন্যান্য পেজে যাওয়ার আগে)
+========================================================== */
+function closeFaqAndReset() {
+    // প্রথমে রিসেট করা
+    resetFaqState();
+    
+    // এরপর মোডালটি বন্ধ করা 
+    toggleOverlay('faqPage'); 
+}
+
+</script>
+</body>
+</html>
